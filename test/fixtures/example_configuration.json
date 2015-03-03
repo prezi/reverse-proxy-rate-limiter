@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "max_requests": 30,
+  "buffer_ratio": 0.1,
+  "healthcheck_url": "/healthcheck/",
+  "buckets": [
+    {
+      "name": "default",
+      "limits": {
+        "capacity_unit": 7,
+        "max_requests_per_ip": 5
+      }
+    },
+    {
+      "name": "reuse",
+      "conditions": [
+        ["header", "X-Prezi-Client", "eq","reuse-e5759ce4bb1c298b063f2d8aa1a334"]
+      ],
+      "limits": {
+        "capacity_unit": 2
+      }
+    },
+    {
+      "name": "backup",
+      "conditions": [
+        ["client_ip", "eq", "12.23.45.56"]
+      ],
+      "limits": {
+        "capacity_unit": 1
+      }
+    }
+  ]
+}

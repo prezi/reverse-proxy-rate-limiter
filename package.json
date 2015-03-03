@@ -1,0 +1,25 @@
+{
+  "name": "reverse-proxy-rate-limiter",
+  "version": "0.0.1",
+  "main": "index.js",
+  "dependencies": {
+    "config": "1.12.0",
+    "http-proxy": "1.8.1",
+    "jsonschema": "1.0.0",
+    "log4js": "0.6.22",
+    "request": "2.51.0",
+    "proxy-addr": "1.0.6",
+    "underscore": "1.7.0"
+  },
+  "devDependencies": {
+    "expect.js": "*",
+    "mocha": "*"
+  },
+  "engines": {
+    "node": "0.10.35"
+  },
+  "scripts": {
+    "start": "node start-rate-limiter.js",
+    "test": "mocha --recursive"
+  }
+}
