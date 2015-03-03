@@ -2,11 +2,13 @@
   "name": "reverse-proxy-rate-limiter",
   "version": "0.0.1",
   "main": "index.js",
+  "private": true,
   "dependencies": {
     "config": "1.12.0",
     "http-proxy": "1.8.1",
     "jsonschema": "1.0.0",
     "log4js": "0.6.22",
+    "node-graphite-client": "git+ssh://git@github.com:prezi/node-graphite-client.git",
     "request": "2.51.0",
     "proxy-addr": "1.0.6",
     "underscore": "1.7.0"
