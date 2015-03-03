@@ -43,9 +43,7 @@ describe("Bucket tests", function () {
         expect(bucket.matches(request)).to.be(false);
     });
 
-    var rl = new rateLimiter.RateLimiter({
-        configEndpoint: "file:./test/fixtures/example_configuration.json"
-    });
+    var rl;
 
     it("should choose the reuse bucket", function () {
         var b = rl.getMatchingBucket({headers: {"x-prezi-client": "reuse-e5759ce4bb1c298b063f2d8aa1a334"}});
@@ -54,5 +52,15 @@ describe("Bucket tests", function () {
     it("should choose the default bucket", function () {
         var b = rl.getMatchingBucket();
         expect(b.name).to.be("default");
+    });
+
+    before(function() {
+        rl = new rateLimiter.RateLimiter({
+            configEndpoint: "file:./test/fixtures/example_configuration.json"
+        });
+    });
+
+    after(function() {
+        rl.terminate();
     });
 });

@@ -24,7 +24,15 @@ describe("counter consistency test", function () {
     };
 
     var tester = new IntegrationTester();
-    var rl = tester.rateLimiter;
+    var rl;
+
+    before(function() {
+        rl = tester.rateLimiter;
+    });
+
+    after(function() {
+        rl.terminate();
+    });
 
     beforeEach(function () {
         rl.updateConfig(cfg);

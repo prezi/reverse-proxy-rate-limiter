@@ -20,7 +20,13 @@ function createTestRateLimiter(options) {
 }
 
 describe("Default settings values", function () {
-    var rl = createTestRateLimiter({});
+    var rl;
+    before(function() {
+        rl = createTestRateLimiter({});
+    });
+    after(function() {
+        rl.terminate();
+    });
 
     it("config endpoint should be set to valid URL", function () {
         expect(rl.getConfigEndpoint()).to.be("http://localhost:80/rate_limiter");

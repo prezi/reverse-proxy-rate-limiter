@@ -12,6 +12,9 @@ describe("Initializing Ratelimiter with configuration", function () {
         rl = new rateLimiter.RateLimiter({configEndpoint: "file:./test/fixtures/example_configuration.json"});
         rl.onConfigurationUpdated = done;
     });
+    afterEach(function() {
+       rl.terminate();
+    });
 
     it("should load required parameters", function () {
         expect(rl.configuration.maxRequests).to.be(30);
@@ -75,6 +78,9 @@ describe("Config change tests", function () {
     beforeEach(function () {
         rl = createTestRateLimiter({});
         rl.updateConfig(cfg);
+    });
+    afterEach(function() {
+        rl.terminate();
     });
 
     it("changing a bucket's config to have no limits it should have no limits", function () {
