@@ -76,11 +76,9 @@ describe("Config change tests", function () {
 
     var rl;
     beforeEach(function () {
+        // the rateLimiter created by createTestRateLimiter does not start a proxy so it doesn't need to be terminated
         rl = createTestRateLimiter({});
         rl.updateConfig(cfg);
-    });
-    afterEach(function() {
-        rl.terminate();
     });
 
     it("changing a bucket's config to have no limits it should have no limits", function () {

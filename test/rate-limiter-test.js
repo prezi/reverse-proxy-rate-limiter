@@ -22,10 +22,8 @@ function createTestRateLimiter(options) {
 describe("Default settings values", function () {
     var rl;
     before(function() {
+        // the rateLimiter created by createTestRateLimiter does not start a proxy so it doesn't need to be terminated
         rl = createTestRateLimiter({});
-    });
-    after(function() {
-        rl.terminate();
     });
 
     it("config endpoint should be set to valid URL", function () {
