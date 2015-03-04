@@ -113,6 +113,12 @@ IntegrationTester.prototype = {
         }
     },
 
+    closeTestBackendServer: function (done) {
+        this.testBackendServer.close(function () {
+            done();
+        });
+    },
+
     pendingRequestsCount: function () {
         return this.requestBuffer.length;
     }
