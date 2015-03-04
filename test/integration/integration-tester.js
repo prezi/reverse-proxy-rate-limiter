@@ -13,7 +13,7 @@ var HTTP_OK = 200,
 
 function IntegrationTester() {
     var _this = this;
-    http.createServer(function (req, res) {
+    this.testBackendServer = http.createServer(function (req, res) {
         var sentMessage = _this.sentMessages[getRequestId(req)];
 
         _this.requestBuffer.push({
@@ -25,18 +25,19 @@ function IntegrationTester() {
         sentMessage.onForwardedCallback();
 
     }).listen(8081);
-}
-exports.IntegrationTester = IntegrationTester;
 
-IntegrationTester.prototype = {
-
-    rateLimiter: rateLimiter.createRateLimiter({
+    this.rateLimiter = rateLimiter.createRateLimiter({
         listenPort: 8080,
         forwardPort: 8081,
         forwardHost: 'localhost',
         configRefreshInterval: 10000,
         configEndpoint: 'file:./test/fixtures/example_configuration.json'
-    }),
+    })
+}
+exports.IntegrationTester = IntegrationTester;
+
+IntegrationTester.prototype = {
+
     requestBuffer: [],
     sentMessages: {},
     requestId: 0,
