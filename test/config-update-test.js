@@ -12,8 +12,8 @@ describe("Initializing Ratelimiter with configuration", function () {
         rl = new rateLimiter.RateLimiter({configEndpoint: "file:./test/fixtures/example_configuration.json"});
         rl.onConfigurationUpdated = done;
     });
-    afterEach(function() {
-       rl.terminate();
+    afterEach(function (done) {
+        rl.close(done);
     });
 
     it("should load required parameters", function () {

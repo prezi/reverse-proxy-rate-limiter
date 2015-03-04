@@ -54,13 +54,14 @@ describe("Bucket tests", function () {
         expect(b.name).to.be("default");
     });
 
-    before(function() {
+    before(function () {
+        // TODO use testRateLimiter instead
         rl = new rateLimiter.RateLimiter({
             configEndpoint: "file:./test/fixtures/example_configuration.json"
         });
     });
 
-    after(function() {
-        rl.terminate();
+    after(function (done) {
+        rl.close(done);
     });
 });

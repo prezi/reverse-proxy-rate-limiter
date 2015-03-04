@@ -19,6 +19,10 @@ describe("Healthcheck test", function() {
         });
     });
 
+    after(function(done) {
+        rl.close(done);
+    });
+
     it("should return a healthcheck if healthcheck header is set", function (done) {
         request({
             url: "http://" + host + ":" + listenPort,

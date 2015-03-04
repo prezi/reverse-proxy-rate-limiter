@@ -23,19 +23,20 @@ describe("counter consistency test", function () {
         ]
     };
 
-    var tester = new IntegrationTester();
-    var rl;
+    var tester;
 
     before(function() {
-        rl = tester.rateLimiter;
+        tester = new IntegrationTester();
     });
 
-    after(function() {
-        rl.terminate();
+    after(function (done) {
+        tester.closeTestBackendServer(function () {
+            tester.rateLimiter.close(done);
+        });
     });
 
     beforeEach(function () {
-        rl.updateConfig(cfg);
+        tester.rateLimiter.updateConfig(cfg);
     });
 
     afterEach(function (done) {
@@ -43,18 +44,18 @@ describe("counter consistency test", function () {
     });
 
     function getCountForBucket(ratelimiter, bucketName) {
-        return ratelimiter.counter.get(rl.configuration.bucketsByName[bucketName], "dummy_ip")[1];
+        return ratelimiter.counter.get(tester.rateLimiter.configuration.bucketsByName[bucketName], "dummy_ip")[1];
     }
 
     it("counter consistency: two in, two served", function (done) {
         tester.sendRequest(2).onForwarded(function () {
             assert.equal(2, tester.pendingRequestsCount());
-            assert.equal(2, rl.counter.getGlobal());
-            assert.equal(2, getCountForBucket(rl, "default"));
+            assert.equal(2, tester.rateLimiter.counter.getGlobal());
+            assert.equal(2, getCountForBucket(tester.rateLimiter, "default"));
             tester.serveRequests().onServed(function () {
                 assert.equal(0, tester.pendingRequestsCount());
-                assert.equal(0, rl.counter.getGlobal());
-                assert.equal(0, getCountForBucket(rl, "default"));
+                assert.equal(0, tester.rateLimiter.counter.getGlobal());
+                assert.equal(0, getCountForBucket(tester.rateLimiter, "default"));
                 done();
             });
         });
@@ -63,17 +64,17 @@ describe("counter consistency test", function () {
     it("counter consistency: four in, one rejected, three served", function (done) {
         tester.sendRequest(3).onForwarded(function () {
             assert.equal(3, tester.pendingRequestsCount());
-            assert.equal(3, rl.counter.getGlobal());
-            assert.equal(3, getCountForBucket(rl, "default"));
+            assert.equal(3, tester.rateLimiter.counter.getGlobal());
+            assert.equal(3, getCountForBucket(tester.rateLimiter, "default"));
 
             tester.sendRequest().onRejected(function () {
                 assert.equal(3, tester.pendingRequestsCount());
-                assert.equal(3, rl.counter.getGlobal());
-                assert.equal(3, getCountForBucket(rl, "default"));
+                assert.equal(3, tester.rateLimiter.counter.getGlobal());
+                assert.equal(3, getCountForBucket(tester.rateLimiter, "default"));
                 tester.serveRequests().onServed(function () {
                     assert.equal(0, tester.pendingRequestsCount());
-                    assert.equal(0, rl.counter.getGlobal());
-                    assert.equal(0, getCountForBucket(rl, "default"));
+                    assert.equal(0, tester.rateLimiter.counter.getGlobal());
+                    assert.equal(0, getCountForBucket(tester.rateLimiter, "default"));
                     done();
                 });
             });
@@ -83,21 +84,21 @@ describe("counter consistency test", function () {
     it("counter consistency: one default bucket, one A bucket, both served", function (done) {
         tester.sendRequest(1).onForwarded(function () {
             assert.equal(1, tester.pendingRequestsCount());
-            assert.equal(1, rl.counter.getGlobal());
-            assert.equal(1, getCountForBucket(rl, "default"));
-            assert.equal(0, getCountForBucket(rl, "A"));
+            assert.equal(1, tester.rateLimiter.counter.getGlobal());
+            assert.equal(1, getCountForBucket(tester.rateLimiter, "default"));
+            assert.equal(0, getCountForBucket(tester.rateLimiter, "A"));
 
             tester.sendRequest(1, {bucket: 'A'}).onForwarded(function () {
                 assert.equal(2, tester.pendingRequestsCount());
-                assert.equal(2, rl.counter.getGlobal());
-                assert.equal(1, getCountForBucket(rl, "default"));
-                assert.equal(1, getCountForBucket(rl, "A"));
+                assert.equal(2, tester.rateLimiter.counter.getGlobal());
+                assert.equal(1, getCountForBucket(tester.rateLimiter, "default"));
+                assert.equal(1, getCountForBucket(tester.rateLimiter, "A"));
 
                 tester.serveRequests().onServed(function () {
                     assert.equal(0, tester.pendingRequestsCount());
-                    assert.equal(0, rl.counter.getGlobal());
-                    assert.equal(0, getCountForBucket(rl, "default"));
-                    assert.equal(0, getCountForBucket(rl, "A"));
+                    assert.equal(0, tester.rateLimiter.counter.getGlobal());
+                    assert.equal(0, getCountForBucket(tester.rateLimiter, "default"));
+                    assert.equal(0, getCountForBucket(tester.rateLimiter, "A"));
                     done();
                 });
             });
@@ -107,27 +108,27 @@ describe("counter consistency test", function () {
     it("counter consistency: one A, two default, one rejected due to global limit", function (done) {
         tester.sendRequest(1, {bucket: 'A'}).onForwarded(function () {
             assert.equal(1, tester.pendingRequestsCount());
-            assert.equal(1, rl.counter.getGlobal());
-            assert.equal(0, getCountForBucket(rl, "default"));
-            assert.equal(1, getCountForBucket(rl, "A"));
+            assert.equal(1, tester.rateLimiter.counter.getGlobal());
+            assert.equal(0, getCountForBucket(tester.rateLimiter, "default"));
+            assert.equal(1, getCountForBucket(tester.rateLimiter, "A"));
 
             tester.sendRequest(2).onForwarded(function () {
                 assert.equal(3, tester.pendingRequestsCount());
-                assert.equal(3, rl.counter.getGlobal());
-                assert.equal(2, getCountForBucket(rl, "default"));
-                assert.equal(1, getCountForBucket(rl, "A"));
+                assert.equal(3, tester.rateLimiter.counter.getGlobal());
+                assert.equal(2, getCountForBucket(tester.rateLimiter, "default"));
+                assert.equal(1, getCountForBucket(tester.rateLimiter, "A"));
 
                 tester.sendRequest(1).onRejected(function () {
                     assert.equal(3, tester.pendingRequestsCount());
-                    assert.equal(3, rl.counter.getGlobal());
-                    assert.equal(2, getCountForBucket(rl, "default"));
-                    assert.equal(1, getCountForBucket(rl, "A"));
+                    assert.equal(3, tester.rateLimiter.counter.getGlobal());
+                    assert.equal(2, getCountForBucket(tester.rateLimiter, "default"));
+                    assert.equal(1, getCountForBucket(tester.rateLimiter, "A"));
 
                     tester.serveRequests().onServed(function () {
                         assert.equal(0, tester.pendingRequestsCount());
-                        assert.equal(0, rl.counter.getGlobal());
-                        assert.equal(0, getCountForBucket(rl, "default"));
-                        assert.equal(0, getCountForBucket(rl, "A"));
+                        assert.equal(0, tester.rateLimiter.counter.getGlobal());
+                        assert.equal(0, getCountForBucket(tester.rateLimiter, "default"));
+                        assert.equal(0, getCountForBucket(tester.rateLimiter, "A"));
                         done();
                     });
                 });
@@ -138,21 +139,21 @@ describe("counter consistency test", function () {
     it("counter consistency: three A, one rejected due to global limit", function (done) {
         tester.sendRequest(3, {bucket: 'A'}).onForwarded(function () {
             assert.equal(3, tester.pendingRequestsCount());
-            assert.equal(3, rl.counter.getGlobal());
-            assert.equal(0, getCountForBucket(rl, "default"));
-            assert.equal(3, getCountForBucket(rl, "A"));
+            assert.equal(3, tester.rateLimiter.counter.getGlobal());
+            assert.equal(0, getCountForBucket(tester.rateLimiter, "default"));
+            assert.equal(3, getCountForBucket(tester.rateLimiter, "A"));
 
             tester.sendRequest(1, {bucket: "A"}).onRejected(function () {
                 assert.equal(3, tester.pendingRequestsCount());
-                assert.equal(3, rl.counter.getGlobal());
-                assert.equal(0, getCountForBucket(rl, "default"));
-                assert.equal(3, getCountForBucket(rl, "A"));
+                assert.equal(3, tester.rateLimiter.counter.getGlobal());
+                assert.equal(0, getCountForBucket(tester.rateLimiter, "default"));
+                assert.equal(3, getCountForBucket(tester.rateLimiter, "A"));
 
                 tester.serveRequests().onServed(function () {
                     assert.equal(0, tester.pendingRequestsCount());
-                    assert.equal(0, rl.counter.getGlobal());
-                    assert.equal(0, getCountForBucket(rl, "default"));
-                    assert.equal(0, getCountForBucket(rl, "A"));
+                    assert.equal(0, tester.rateLimiter.counter.getGlobal());
+                    assert.equal(0, getCountForBucket(tester.rateLimiter, "default"));
+                    assert.equal(0, getCountForBucket(tester.rateLimiter, "A"));
                     done();
                 });
             });

@@ -24,7 +24,17 @@ describe("Integration tests", function () {
         tester.rateLimiter.updateConfig(_cfg);
     }
 
-    var tester = new IntegrationTester();
+    var tester;
+    before(function() {
+        tester = new IntegrationTester();
+    });
+
+    after(function (done) {
+        tester.closeTestBackendServer(function () {
+            tester.rateLimiter.close(done);
+        });
+    });
+
     beforeEach(function (done) {
         tester.rateLimiter.onConfigurationUpdated = function () {
             tester.rateLimiter.onConfigurationUpdated = null;
