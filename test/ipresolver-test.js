@@ -32,14 +32,22 @@ function createRequest(headers, expected, done) {
 
 describe("Client IP tests", function () {
     var headers;
+    var httpServer;
 
     before(function () {
-        http.createServer(function (req, res) {
+        httpServer = http.createServer(function (req, res) {
             var ip = ipResolver.resolve(req);
             res.setHeader(ACTUAL, ip);
+            res.setHeader("Connection", "close");
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end();
         }).listen(PORT);
+    });
+
+    after(function (done) {
+        httpServer.close(function () {
+            done();
+        });
     });
 
     beforeEach(function () {
