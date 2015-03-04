@@ -25,7 +25,7 @@ describe("counter consistency test", function () {
 
     var tester;
 
-    before(function() {
+    before(function () {
         tester = new IntegrationTester();
     });
 

@@ -9,7 +9,7 @@ describe("Healthcheck test", function() {
     var listenPort = 8082;
 
     var rl;
-    before(function() {
+    before(function () {
         rl = rateLimiter.createRateLimiter({
             listenPort: listenPort,
             forwardPort: 8081,
@@ -19,7 +19,7 @@ describe("Healthcheck test", function() {
         });
     });
 
-    after(function(done) {
+    after(function (done) {
         rl.close(done);
     });
 
