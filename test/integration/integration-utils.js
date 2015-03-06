@@ -39,7 +39,7 @@ module.exports.describe = function(name, testingFunction) {
         });
 
         afterEach(function(done) {
-            tester.reset(done);
+	        tester.reset(done);
         });
 
         testingFunction(tester);

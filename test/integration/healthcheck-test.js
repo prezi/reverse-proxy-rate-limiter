@@ -2,30 +2,14 @@
 
 var rateLimiter = require("./../../index.js"),
     request = require("request"),
-    assert = require("assert");
+    assert = require("assert"),
+	itUtils = require('./integration-utils');
 
-describe("Healthcheck test", function() {
-    var host = "localhost";
-    var listenPort = 8082;
+itUtils.describe("Healthcheck test", function(tester) {
 
-    var rl;
-    before(function () {
-        rl = rateLimiter.createRateLimiter({
-            listenPort: listenPort,
-            forwardPort: 8081,
-            forwardHost: host,
-            configRefreshInterval: 10000,
-            configEndpoint: 'file:./test/fixtures/example_configuration.json'
-        });
-    });
-
-    after(function (done) {
-        rl.close(done);
-    });
-
-    it("should return a healthcheck if healthcheck header is set", function (done) {
+    it("should return a healthcheck if healthcheck header is set", function(done) {
         request({
-            url: "http://" + host + ":" + listenPort,
+            url: "http://localhost:" + tester.listenPort,
             headers: {
                 'x-rate-limiter': 'healthcheck'
             }

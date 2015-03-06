@@ -11,7 +11,18 @@ var HTTP_OK = 200,
     HTTP_INTERNAL_SERVER_ERROR = 500,
     REQUEST_ID_HEADER = "X-RateLimiter-IntegrationTest-RequestId";
 
+var port = 8080;
+
 function IntegrationTester() {
+	console.log("Starting integration tester, port: " + port);
+
+	this.requestBuffer = [];
+	this.sentMessages = {};
+	this.requestId = 0;
+	this.listenPort = port;
+	this.forwardPort = port + 1;
+	port += 2;
+
     var _this = this;
     this.testBackendServer = http.createServer(function (req, res) {
         var sentMessage = _this.sentMessages[getRequestId(req)];
@@ -24,23 +35,19 @@ function IntegrationTester() {
         });
         sentMessage.onForwardedCallback();
 
-    }).listen(8081);
+    }).listen(this.forwardPort);
 
     this.rateLimiter = rateLimiter.createRateLimiter({
-        listenPort: 8080,
-        forwardPort: 8081,
+        listenPort: this.listenPort,
+        forwardPort: this.forwardPort,
         forwardHost: 'localhost',
         configRefreshInterval: 10000,
         configEndpoint: 'file:./test/fixtures/example_configuration.json'
-    })
+    });
 }
 exports.IntegrationTester = IntegrationTester;
 
 IntegrationTester.prototype = {
-
-    requestBuffer: [],
-    sentMessages: {},
-    requestId: 0,
 
     sendRequest: function (count, options) {
         if (typeof count === "undefined" || count === 0) {
@@ -114,9 +121,7 @@ IntegrationTester.prototype = {
     },
 
     closeTestBackendServer: function (done) {
-        this.testBackendServer.close(function () {
-            done();
-        });
+        this.testBackendServer.close(done);
     },
 
     pendingRequestsCount: function () {
@@ -152,7 +157,7 @@ function SentMessage(it, requestId, options) {
 
     var headers = {};
     headers[REQUEST_ID_HEADER] = requestId;
-    url = "http://localhost:8080/";
+    url = "http://localhost:" + it.listenPort + "/";
 
     if (options) {
         if (options.bucket) {
