@@ -17,20 +17,20 @@ itUtils.describe("Integration tests", function(tester) {
 
     it("should have one element in the buffer", function(done) {
         tester.sendRequest().onForwarded(function() {
-            assert.equal(tester.pendingRequestsCount(), 1);
+            itUtils.checkPendingRequestsCount(tester, 1);
             done();
         });
     });
 
     it("should consume all the requests in two steps", function(done) {
         tester.sendRequest(3).onForwarded(function() {
-            assert.equal(tester.pendingRequestsCount(), 3);
+            itUtils.checkPendingRequestsCount(tester, 3);
 
             tester.serveRequests(2).onServed(function() {
-                assert.equal(tester.pendingRequestsCount(), 1);
+                itUtils.checkPendingRequestsCount(tester, 1);
 
                 tester.serveRequests().onServed(function() {
-                    assert.equal(tester.pendingRequestsCount(), 0);
+                    itUtils.checkPendingRequestsCount(tester, 0);
                     done();
                 });
             });
@@ -41,7 +41,7 @@ itUtils.describe("Integration tests", function(tester) {
         changeConfig("max_requests", 1);
         tester.sendRequest().onForwarded(function() {
             tester.sendRequest().onRejected(function() {
-                assert.equal(tester.pendingRequestsCount(), 1);
+                itUtils.checkPendingRequestsCount(tester, 1);
                 done();
             });
         });
@@ -53,13 +53,13 @@ itUtils.describe("Integration tests", function(tester) {
 
         tester.sendRequest().onForwarded(function() {
             tester.sendRequest().onRejected(function() {
-                assert.equal(tester.pendingRequestsCount(), 1);
+                itUtils.checkPendingRequestsCount(tester, 1);
 
                 tester.serveRequests().onServed(function() {
-                    assert.equal(tester.pendingRequestsCount(), 0);
+                    itUtils.checkPendingRequestsCount(tester, 0);
 
                     tester.sendRequest().onForwarded(function() {
-                        assert.equal(tester.pendingRequestsCount(), 1);
+                        itUtils.checkPendingRequestsCount(tester, 1);
                         done();
                     });
                 });
@@ -102,7 +102,7 @@ itUtils.describe("Integration tests", function(tester) {
         tester.sendRequest(1, {
             "path": testEndpoint
         }).onRejected(function(res) {
-            assert.equal(tester.pendingRequestsCount(), 0);
+            itUtils.checkPendingRequestsCount(tester, 0);
             assert.equal(res.statusCode, 404);
 
             tester.rateLimiter.options.configEndpoint = oldEndpoint;
@@ -178,9 +178,9 @@ itUtils.describe("Integration tests", function(tester) {
         tester.sendRequest(1, {
             "expectedStatusCode": 401
         }).onForwarded(function() {
-            assert.equal(tester.pendingRequestsCount(), 1);
+            itUtils.checkPendingRequestsCount(tester, 1);
             tester.serveRequestWithStatusCode(401).onServed(function() {
-                assert.equal(tester.pendingRequestsCount(), 0);
+                itUtils.checkPendingRequestsCount(tester, 0);
                 done();
             });
         });
@@ -190,9 +190,9 @@ itUtils.describe("Integration tests", function(tester) {
         tester.sendRequest(1, {
             "expectedStatusCode": 500
         }).onForwarded(function() {
-            assert.equal(tester.pendingRequestsCount(), 1);
+            itUtils.checkPendingRequestsCount(tester, 1);
             tester.serveRequestWithStatusCode(500).onServed(function() {
-                assert.equal(tester.pendingRequestsCount(), 0);
+                itUtils.checkPendingRequestsCount(tester, 0);
                 done();
             });
         });

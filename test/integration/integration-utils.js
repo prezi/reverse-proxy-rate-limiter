@@ -1,5 +1,6 @@
 var IntegrationTester = require("./integration-tester").IntegrationTester;
 var _ = require("underscore")._;
+var assert = require("assert");
 
 var cfg = {
     "version": 1,
@@ -43,4 +44,8 @@ module.exports.describe = function(name, testingFunction) {
 
         testingFunction(tester);
     });
+}
+
+module.exports.checkPendingRequestsCount = function(tester, expectedRequestsCount) {
+    assert.equal(tester.pendingRequestsCount(), expectedRequestsCount);
 }
