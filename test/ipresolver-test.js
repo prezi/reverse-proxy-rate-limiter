@@ -2,12 +2,16 @@
 
 var http = require('http'),
     assert = require('assert'),
-    ipResolver = require('../lib/rate-limiter/ipresolver');
+    proxyquire = require('proxyquire'),
+    helpers = require('./helpers'),
+    ipResolver = proxyquire('../lib/rate-limiter/ipresolver', { './config': helpers.configMock });
 
 var EXPECTED = "expected";
 var ACTUAL = "actual";
 var HOST = "localhost";
 var PORT = "9876";
+
+var TEST_FORWARD_HEADER = 'X-TEST-FORWARDED-FOR';
 
 var CLIENT_IP = "12.34.56.78";
 var LOCAL_HOST = "127.0.0.1";
@@ -54,16 +58,21 @@ describe("Client IP tests", function () {
         headers = {};
     });
 
-    it("SMARTROUTER: if available, takes precedence", function (done) {
-        headers[ipResolver.SMARTROUTER_HEADER] = CLIENT_IP;
+    it("CUSTOM_HEADER: if available, takes precedence", function (done) {
+        headers[TEST_FORWARD_HEADER] = CLIENT_IP;
         headers[ipResolver.PROXY_HEADER] = LOCAL_HOST;
         headers[ipResolver.REMOTE_ADDR] = LOCAL_HOST;
         createRequest(headers, CLIENT_IP, done);
     });
 
-    it("SMARTROUTER: the last ip in the list is always correct", function (done) {
-        headers[ipResolver.SMARTROUTER_HEADER] = IP_LIST;
+    it("CUSTOM_HEADER: the last ip in the list is always correct", function (done) {
+        headers[TEST_FORWARD_HEADER] = IP_LIST;
         createRequest(headers, LOCAL_HOST, done);
+    });
+
+    it("CUSTOM_HEADER: custom header can ignore any ip ranges", function (done) {
+        headers[TEST_FORWARD_HEADER] = LONG_IP_LIST;
+        createRequest(headers, SOME_IP, done);
     });
 
     it("PROXY_HEADER: if no SMARTROUTER header, PROXY_HEADER takes precedence", function (done) {

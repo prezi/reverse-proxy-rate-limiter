@@ -1,21 +1,10 @@
 "use strict";
 
 var expect = require('expect.js'),
-    rateLimiter = require("../lib/rate-limiter/");
-
-function createTestRateLimiter(options) {
-    // returns a RateLimiter instance that neither initializes a config nor starts the proxy
-
-    function TestRateLimiter(options) {
-        rateLimiter.RateLimiter.call(this, options);
-    }
-
-    TestRateLimiter.prototype = Object.create(rateLimiter.RateLimiter.prototype);
-    TestRateLimiter.prototype.loadConfig = function () {};
-    TestRateLimiter.prototype.initProxy = function () {};
-
-    return new TestRateLimiter(options);
-}
+    _ = require("underscore")._,
+    assert = require('assert'),
+    rateLimiter = require("../lib/rate-limiter/"),
+    createTestRateLimiter = require('./helpers').createTestRateLimiter;
 
 describe("Default settings values", function () {
     var rl;
