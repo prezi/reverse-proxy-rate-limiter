@@ -1,10 +1,10 @@
 "use strict";
 
-var rateLimiter = require("../lib/rate-limiter/");
-
 module.exports.createTestRateLimiter = createTestRateLimiter;
 
+
 function createTestRateLimiter(options) {
+    var rateLimiter = require("../lib/rate-limiter/");
     // returns a RateLimiter instance that neither initializes a config nor starts the proxy
 
     function TestRateLimiter(options) {

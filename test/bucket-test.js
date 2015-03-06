@@ -1,8 +1,11 @@
 "use strict";
 
 var expect = require('expect.js'),
+    assert = require('assert'),
+    proxyquire = require('proxyquire'),
     Bucket = require('../lib/rate-limiter/bucket').Bucket,
-    rateLimiter = require("../lib/rate-limiter/");
+    helpers = require('./helpers'),
+    rateLimiter = proxyquire("../lib/rate-limiter/", { config: helpers.configMock });
 
 describe("Bucket tests", function () {
     var request = {
