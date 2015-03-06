@@ -1,5 +1,17 @@
 {
   "log4js": {
     "path": "/path/to/log4js.json"
+  },
+  "forwarded_headers": {
+    "X-EXAMPLE-FORWARDED-FOR": {
+      "ignored_ip_ranges": [
+        "127.0.0.0/8",
+        "10.0.0.0/8",
+        "172.16.0.0/12",
+        "192.0.2.0/24",
+        "192.168.0.0/16",
+        "193.45.0.0/16"
+      ]
+    }
   }
 }
