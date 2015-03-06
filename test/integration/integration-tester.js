@@ -14,8 +14,6 @@ var HTTP_OK = 200,
 var port = 8080;
 
 function IntegrationTester() {
-	console.log("Starting integration tester, port: " + port);
-
 	this.requestBuffer = [];
 	this.sentMessages = {};
 	this.requestId = 0;
