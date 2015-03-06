@@ -39,8 +39,8 @@ describe("Initializing Ratelimiter with configuration", function () {
         expect(rl.configuration.bucketsByName["default"].maxRequests).to.be(19);
         expect(rl.configuration.bucketsByName["default"].maxRequestsPerIp).to.be(5);
 
-        expect(rl.configuration.bucketsByName["reuse"].maxRequests).to.be(6);
-        expect(rl.configuration.bucketsByName["backup"].maxRequests).to.be(3);
+        expect(rl.configuration.bucketsByName.reuse.maxRequests).to.be(6);
+        expect(rl.configuration.bucketsByName.backup.maxRequests).to.be(3);
     });
 });
 

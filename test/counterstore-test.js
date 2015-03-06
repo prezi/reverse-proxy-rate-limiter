@@ -1,7 +1,6 @@
 "use strict";
 
-var _ = require("underscore")._,
-    assert = require("assert"),
+var assert = require("assert"),
     CounterStore = require("../lib/rate-limiter/counter.js").CounterStore;
 
 describe("CounterStore tests", function () {

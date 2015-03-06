@@ -1,7 +1,6 @@
 "use strict";
 
 var expect = require('expect.js'),
-    assert = require('assert'),
     Bucket = require('../lib/rate-limiter/bucket').Bucket,
     rateLimiter = require("../lib/rate-limiter/");
 

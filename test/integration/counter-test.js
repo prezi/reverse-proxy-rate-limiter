@@ -1,10 +1,9 @@
 "use strict";
 
-var _ = require("underscore")._,
-    assert = require("assert"),
-    IntegrationTester = require("./integration-tester").IntegrationTester;
+var assert = require("assert"),
+	itUtils = require('./integration-utils');
 
-describe("counter consistency test", function () {
+itUtils.describe("counter consistency test", function(tester) {
     var cfg = {
         version: 1,
         max_requests: 3,
@@ -23,24 +22,8 @@ describe("counter consistency test", function () {
         ]
     };
 
-    var tester;
-
-    before(function () {
-        tester = new IntegrationTester();
-    });
-
-    after(function (done) {
-        tester.closeTestBackendServer(function () {
-            tester.rateLimiter.close(done);
-        });
-    });
-
-    beforeEach(function () {
+    beforeEach(function() {
         tester.rateLimiter.updateConfig(cfg);
-    });
-
-    afterEach(function (done) {
-        tester.reset(done);
     });
 
     function getCountForBucket(ratelimiter, bucketName) {

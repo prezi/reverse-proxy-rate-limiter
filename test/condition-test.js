@@ -2,7 +2,6 @@
 
 var expect = require('expect.js'),
     Condition = require("../lib/rate-limiter/conditions/conditions").Condition,
-    _ = require("underscore")._,
     Predicates = require("../lib/rate-limiter/conditions/predicates").Predicates,
     SubjectTypes = require("../lib/rate-limiter/conditions/subject-types").SubjectTypes;
 
