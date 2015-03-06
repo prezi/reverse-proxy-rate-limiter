@@ -55,7 +55,7 @@ describe("Bucket tests", function () {
     });
 
     before(function () {
-        rl = helpers.createTestRateLimiter();
+        rl = helpers.createTestRateLimiter({});
         rl.updateConfig(JSON.parse(fs.readFileSync("./test/fixtures/example_configuration.json")));
     });
 
