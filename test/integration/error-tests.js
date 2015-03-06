@@ -1,8 +1,6 @@
 "use strict";
 
-var _ = require("underscore")._,
-    assert = require("assert"),
-    limitsConfig = require("../../lib/rate-limiter/limits-config"),
+var assert = require("assert"),
     itUtils = require('./integration-utils');
 
 itUtils.describe("Integration tests - error-tests", function(tester) {

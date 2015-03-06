@@ -3,4 +3,4 @@ var fs = require('fs'),
 
 var config = JSON.parse(fs.readFileSync('/etc/prezi/ratelimiter/configuration.json', 'utf8'));
 
-var rl = rateLimiter.createRateLimiter(config);
+rateLimiter.createRateLimiter(config);

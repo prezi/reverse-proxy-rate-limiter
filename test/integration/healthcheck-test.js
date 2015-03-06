@@ -1,7 +1,6 @@
 "use strict";
 
-var rateLimiter = require("./../../index.js"),
-    request = require("request"),
+var request = require("request"),
     assert = require("assert"),
 	itUtils = require('./integration-utils');
 

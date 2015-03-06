@@ -16,7 +16,7 @@ module.exports.changeConfig = function(tester, key, value) {
     var _cfg = _.clone(cfg);
     _cfg[key] = value;
     tester.rateLimiter.updateConfig(_cfg);
-}
+};
 
 module.exports.describe = function(name, testingFunction) {
 
@@ -44,8 +44,8 @@ module.exports.describe = function(name, testingFunction) {
 
         testingFunction(tester);
     });
-}
+};
 
 module.exports.checkPendingRequestsCount = function(tester, expectedRequestsCount) {
     assert.equal(tester.pendingRequestsCount(), expectedRequestsCount);
-}
+};

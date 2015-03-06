@@ -1,7 +1,6 @@
 "use strict";
 
-var _ = require("underscore")._,
-    assert = require("assert"),
+var assert = require("assert"),
 	itUtils = require('./integration-utils');
 
 itUtils.describe("counter consistency test", function(tester) {

@@ -1,8 +1,6 @@
 "use strict";
 
 var expect = require('expect.js'),
-    _ = require("underscore")._,
-    assert = require('assert'),
     rateLimiter = require("../lib/rate-limiter/");
 
 function createTestRateLimiter(options) {

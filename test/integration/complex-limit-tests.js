@@ -1,15 +1,8 @@
 "use strict";
 
-var _ = require("underscore")._,
-    assert = require("assert"),
-    limitsConfig = require("../../lib/rate-limiter/limits-config"),
-    itUtils = require('./integration-utils');
+var itUtils = require('./integration-utils');
 
 itUtils.describe("Integration tests", function(tester) {
-
-    function changeConfig(key, value) {
-        itUtils.changeConfig(tester, key, value);
-    }
 
     var cfg2 = {
         version: 1,
@@ -83,7 +76,7 @@ itUtils.describe("Integration tests", function(tester) {
                                 done();
                             });
                         });
-                    })
+                    });
                 });
             });
         });
