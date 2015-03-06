@@ -4,7 +4,7 @@ var http = require('http'),
     assert = require('assert'),
     proxyquire = require('proxyquire'),
     helpers = require('./helpers'),
-    ipResolver = proxyquire('../lib/rate-limiter/ipresolver', { config: helpers.configMock });
+    ipResolver = proxyquire('../lib/rate-limiter/ipresolver', { './config': helpers.configMock });
 
 var EXPECTED = "expected";
 var ACTUAL = "actual";
