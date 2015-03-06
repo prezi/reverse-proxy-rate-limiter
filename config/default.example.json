@@ -1,0 +1,5 @@
+{
+  "log4js": {
+    "path": "/path/to/log4js.json"
+  }
+}
