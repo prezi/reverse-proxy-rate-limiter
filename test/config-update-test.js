@@ -4,7 +4,7 @@ var expect = require('expect.js'),
     _ = require("underscore")._,
     assert = require('assert'),
     rateLimiter = require("../lib/rate-limiter/"),
-    createTestRateLimiter = require("./helpers");
+    createTestRateLimiter = require("./helpers").createTestRateLimiter;
 
 describe("Initializing Ratelimiter with configuration", function () {
     var rl;
