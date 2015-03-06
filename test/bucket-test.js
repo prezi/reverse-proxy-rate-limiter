@@ -1,11 +1,9 @@
 "use strict";
 
 var expect = require('expect.js'),
-    assert = require('assert'),
-    proxyquire = require('proxyquire'),
-    Bucket = require('../lib/rate-limiter/bucket').Bucket,
+    fs = require('fs'),
     helpers = require('./helpers'),
-    rateLimiter = proxyquire("../lib/rate-limiter/", { config: helpers.configMock });
+    Bucket = require('../lib/rate-limiter/bucket').Bucket;
 
 describe("Bucket tests", function () {
     var request = {
@@ -57,13 +55,8 @@ describe("Bucket tests", function () {
     });
 
     before(function () {
-        // TODO use testRateLimiter instead
-        rl = new rateLimiter.RateLimiter({
-            configEndpoint: "file:./test/fixtures/example_configuration.json"
-        });
+        rl = helpers.createTestRateLimiter();
+        rl.updateConfig(JSON.parse(fs.readFileSync("./test/fixtures/example_configuration.json")));
     });
 
-    after(function (done) {
-        rl.close(done);
-    });
 });
