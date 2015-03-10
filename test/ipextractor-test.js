@@ -46,4 +46,4 @@ describe("IP Extracting",function(){
         var result = ipextractor.extractClientIP(' 192.168.1.1, 192.168.1.2');
         assert.equal(result,'192.168.1.2');
     });
-})
+});

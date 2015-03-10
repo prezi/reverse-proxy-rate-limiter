@@ -72,7 +72,6 @@ describe("Client IP tests", function () {
     it("CUSTOM_HEADER: if available, takes precedence", function (done) {
         headers[TEST_FORWARD_HEADER] = CLIENT_IP;
         headers[ipResolver.PROXY_HEADER] = LOCAL_HOST;
-        headers[ipResolver.REMOTE_ADDR] = LOCAL_HOST;
         createRequest(headers, CLIENT_IP, done);
     });
 
@@ -86,9 +85,8 @@ describe("Client IP tests", function () {
         createRequest(headers, SOME_IP, done);
     });
 
-    it("PROXY_HEADER: if no SMARTROUTER header, PROXY_HEADER takes precedence", function (done) {
+    it("PROXY_HEADER: if no custom header, PROXY_HEADER takes precedence", function (done) {
         headers[ipResolver.PROXY_HEADER] = CLIENT_IP;
-        headers[ipResolver.REMOTE_ADDR] = LOCAL_HOST;
         createRequest(headers, CLIENT_IP, done);
     });
 
@@ -103,7 +101,6 @@ describe("Client IP tests", function () {
     });
 
     it("REMOTE_ADDR: no proxies involved, use what we get from server", function (done) {
-        headers[ipResolver.REMOTE_ADDR] = LOCAL_HOST;
         createRequest(headers, LOCAL_HOST, done);
     });
 });
