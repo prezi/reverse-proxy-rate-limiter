@@ -15,8 +15,7 @@
   },
   "devDependencies": {
     "expect.js": "*",
-    "mocha": "*",
-    "proxyquire": "1.4.0"
+    "mocha": "*"
   },
   "engines": {
     "node": "0.10.35"

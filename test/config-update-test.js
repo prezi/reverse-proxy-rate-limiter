@@ -3,9 +3,8 @@
 var expect = require('expect.js'),
     _ = require("underscore")._,
     assert = require('assert'),
-    proxyquire = require('proxyquire'),
     helpers = require('./helpers'),
-    rateLimiter = proxyquire("../lib/rate-limiter/", { './config': helpers.configMock }),
+    rateLimiter = require("../lib/rate-limiter/"),
     createTestRateLimiter = require("./helpers").createTestRateLimiter;
 
 describe("Initializing Ratelimiter with configuration", function () {
