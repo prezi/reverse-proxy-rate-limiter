@@ -2,14 +2,25 @@
 
 var http = require('http'),
     assert = require('assert'),
-    proxyquire = require('proxyquire'),
     helpers = require('./helpers'),
-    ipResolver = proxyquire('../lib/rate-limiter/ipresolver', { './config': helpers.configMock });
+    ipResolver = require('../lib/rate-limiter/ipresolver');
 
 var EXPECTED = "expected";
 var ACTUAL = "actual";
 var HOST = "localhost";
 var PORT = "9876";
+
+var TEST_FORWARD_HEADERS = {
+    "X-TEST-FORWARDED-FOR": {
+        "ignored_ip_ranges": [
+            "127.0.0.0/8",
+            "10.0.0.0/8",
+            "172.16.0.0/12",
+            "192.0.2.0/24",
+            "12.34.0.0/16"
+        ]
+    }
+};
 
 var TEST_FORWARD_HEADER = 'X-TEST-FORWARDED-FOR';
 
@@ -40,7 +51,7 @@ describe("Client IP tests", function () {
 
     before(function () {
         httpServer = http.createServer(function (req, res) {
-            var ip = ipResolver.resolve(req);
+            var ip = new ipResolver.IPResolver(TEST_FORWARD_HEADERS).resolve(req);
             res.setHeader(ACTUAL, ip);
             res.setHeader("Connection", "close");
             res.writeHead(200, {'Content-Type': 'text/plain'});
