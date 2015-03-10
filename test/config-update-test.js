@@ -10,7 +10,10 @@ var expect = require('expect.js'),
 describe("Initializing Ratelimiter with configuration", function () {
     var rl;
     beforeEach(function (done) {
-        rl = new rateLimiter.RateLimiter({configEndpoint: "file:./test/fixtures/example_configuration.json"});
+        var config = require('../lib/rate-limiter/config').load();
+        config.configEndpoint = "file:./test/fixtures/example_configuration.json";
+
+        rl = new rateLimiter.RateLimiter(config);
         rl.onConfigurationUpdated = done;
     });
     afterEach(function (done) {

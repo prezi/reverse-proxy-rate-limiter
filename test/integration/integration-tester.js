@@ -35,13 +35,12 @@ function IntegrationTester() {
 
     }).listen(this.forwardPort);
 
-    this.rateLimiter = rateLimiter.createRateLimiter({
-        listenPort: this.listenPort,
-        forwardPort: this.forwardPort,
-        forwardHost: 'localhost',
-        configRefreshInterval: 10000,
-        configEndpoint: 'file:./test/fixtures/example_configuration.json'
-    });
+    var config = require('../../lib/rate-limiter/config').load();
+    config.listenPort = this.listenPort;
+    config.forwardPort = this.forwardPort;
+    config.configEndpoint = "file:./test/fixtures/example_configuration.json";
+
+    this.rateLimiter = rateLimiter.createRateLimiter(config);
 }
 exports.IntegrationTester = IntegrationTester;
 
