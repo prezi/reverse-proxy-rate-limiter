@@ -6,18 +6,18 @@ Reverse proxy written in Node.js that limits incoming requests based on their or
 
 ## JS-Hint
 * [How to install] (https://packagecontrol.io/packages/JSHint)
-* To add options to the current configurations open 'package.json' and add your options under 'jshintConfig'. 
+* To add options to the current configurations open 'package.json' and add your options under 'jshintConfig'.
 
 ## Configuration
 
 There are 5 levels of configuration sources (all but the first one optional). From lowest to highest priority:
 
- * Default configuration values hard-coded in `lib/rate-limiter/config.js`
+ * Default configuration values hard-coded in `lib/rate-limiter/settings.js`
  * `$PWD/config/default.json` if it exists
  * `$PWD/config/$NODE_ENV.json` if it exists
- * The second parameter to `lib/rate-limiter/config.js#load` is an optional function which gets called with
+ * The second parameter to `lib/rate-limiter/settings.js#load` is an optional function which gets called with
    a `ConfigBuilder` instance as its only argument. It can make `add{Obj,File,Dir}` calls on it to add
    any custom config sources.
- * The first parameter to `lib/rate-limiter/config.js#load` is an optional string which is the path to
+ * The first parameter to `lib/rate-limiter/settings.js#load` is an optional string which is the path to
    a configuration file. If run through `lib/rate-limiter/boot.js` (used by `start-rate-limiter.js`), the
    command-line argument `--config` (or just `-c`) is passed in here.

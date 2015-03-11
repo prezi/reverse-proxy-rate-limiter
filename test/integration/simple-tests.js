@@ -81,9 +81,9 @@ itUtils.describe("Integration tests - simple tests", function(tester) {
     });
 
     it("should not proxy requests to the configEndpoint", function(done) {
-        var oldEndpoint = tester.rateLimiter.options.configEndpoint;
+        var oldEndpoint = tester.rateLimiter.settings.configEndpoint;
         var testEndpoint = "test-config-endpoint";
-        tester.rateLimiter.options.configEndpoint = "/" + testEndpoint;
+        tester.rateLimiter.settings.configEndpoint = "/" + testEndpoint;
 
         tester.sendRequest(1, {
             "path": testEndpoint
@@ -91,7 +91,7 @@ itUtils.describe("Integration tests - simple tests", function(tester) {
 	        itUtils.checkPendingRequestsCount(tester, 0);
             assert.equal(res.statusCode, 404);
 
-            tester.rateLimiter.options.configEndpoint = oldEndpoint;
+            tester.rateLimiter.settings.configEndpoint = oldEndpoint;
             done();
         });
 
