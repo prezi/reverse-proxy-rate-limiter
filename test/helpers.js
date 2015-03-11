@@ -19,19 +19,3 @@ function createTestRateLimiter(options) {
 
     return new TestRateLimiter(options);
 }
-
-module.exports.configMock = {
-    "log4js.path": __dirname + "/../lib/log4js-configuration.json",
-
-    "forwarded_headers": {
-        "X-TEST-FORWARDED-FOR": {
-            "ignored_ip_ranges": [
-                "127.0.0.0/8",
-                "10.0.0.0/8",
-                "172.16.0.0/12",
-                "192.0.2.0/24",
-                "12.34.0.0/16"
-            ]
-        }
-    }
-};
