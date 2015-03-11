@@ -73,7 +73,7 @@ itUtils.describe("Integration tests - simple tests", function(tester) {
                 tester.sendRequest(1, {
                     "path": "healthcheck/"
                 }).onForwarded(function() {
-                    assert.equal(tester.rateLimiter.counter.getGlobal(), 1);
+                    assert.equal(tester.rateLimiter.counter.getGlobalRequestCount(), 1);
                     done();
                 });
             });

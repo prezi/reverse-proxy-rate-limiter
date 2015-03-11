@@ -13,9 +13,9 @@ itUtils.describe("Integration tests - error-tests", function (tester) {
         changeConfig("max_requests", 1);
 
         tester.sendRequest().onForwarded(function () {
-            assert.equal(tester.rateLimiter.counter.getGlobal(), 1);
+            assert.equal(tester.rateLimiter.counter.getGlobalRequestCount(), 1);
             tester.failRequestWithInvalidStatusCode().onFailed(function () {
-                assert.equal(tester.rateLimiter.counter.getGlobal(), 0);
+                assert.equal(tester.rateLimiter.counter.getGlobalRequestCount(), 0);
                 done();
             });
         });
@@ -25,9 +25,9 @@ itUtils.describe("Integration tests - error-tests", function (tester) {
         changeConfig("max_requests", 1);
 
         tester.sendRequest().onForwarded(function () {
-            assert.equal(tester.rateLimiter.counter.getGlobal(), 1);
+            assert.equal(tester.rateLimiter.counter.getGlobalRequestCount(), 1);
             tester.failRequestWithInvalidContentLength().onFailed(function () {
-                assert.equal(tester.rateLimiter.counter.getGlobal(), 0);
+                assert.equal(tester.rateLimiter.counter.getGlobalRequestCount(), 0);
                 done();
             });
         });

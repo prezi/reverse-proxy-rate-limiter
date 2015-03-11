@@ -18,15 +18,15 @@ describe("CounterStore tests", function () {
         cs.increment(bucket2, "ip1");
 
         var counters = {
-            global: cs.get(bucket1, "ip1")[0],
+            global: cs.getGlobalRequestCount(),
 
-            bucket1: cs.get(bucket1, "ip1")[1],
-            bucket1_ip1: cs.get(bucket1, "ip1")[2],
-            bucket1_ip2: cs.get(bucket1, "ip2")[2],
+            bucket1: cs.getRequestCountForBucket(bucket1, "ip1"),
+            bucket1_ip1: cs.getRequestCountForBucketAndIP(bucket1, "ip1"),
+            bucket1_ip2: cs.getRequestCountForBucketAndIP(bucket1, "ip2"),
 
-            bucket2: cs.get(bucket2, "ip1")[1],
-            bucket2_ip1: cs.get(bucket2, "ip1")[2],
-            bucket2_ip2: cs.get(bucket2, "ip2")[2]
+            bucket2: cs.getRequestCountForBucket(bucket2),
+            bucket2_ip1: cs.getRequestCountForBucketAndIP(bucket2, "ip1"),
+            bucket2_ip2: cs.getRequestCountForBucketAndIP(bucket2, "ip2")
         };
 
         assert.equal(counters.global, 4);
@@ -48,11 +48,11 @@ describe("CounterStore tests", function () {
         cs.decrement(bucket1, "ip2");
 
         var counters = {
-            global: cs.get(bucket1, "ip1")[0],
+            global: cs.getGlobalRequestCount(),
 
-            bucket1: cs.get(bucket1, "ip1")[1],
-            bucket1_ip1: cs.get(bucket1, "ip1")[2],
-            bucket1_ip2: cs.get(bucket1, "ip2")[2]
+            bucket1: cs.getRequestCountForBucket(bucket1),
+            bucket1_ip1: cs.getRequestCountForBucketAndIP(bucket1, "ip1"),
+            bucket1_ip2: cs.getRequestCountForBucketAndIP(bucket1, "ip2")
         };
 
         assert.equal(counters.global, 1);
