@@ -1,7 +1,7 @@
 "use strict";
 
 var expect = require('expect.js'),
-    _ = require("underscore")._,
+    _ = require("lodash"),
     assert = require('assert'),
     helpers = require('./helpers'),
     rateLimiter = require("../lib/rate-limiter/"),
@@ -63,9 +63,7 @@ describe("Config change tests", function () {
     };
 
     function cloneConfig(cfg) {
-        // _.clone creates a shallow copy, let's create a bit deeper
-        var cloned = _.clone(cfg);
-        cloned.buckets = _.map(cfg.buckets, _.clone);
+        var cloned = _.clone(cfg, true);
         return cloned;
     }
 

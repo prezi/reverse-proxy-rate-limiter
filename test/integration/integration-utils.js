@@ -1,6 +1,6 @@
-var IntegrationTester = require("./integration-tester").IntegrationTester;
-var _ = require("underscore")._;
-var assert = require("assert");
+var IntegrationTester = require("./integration-tester").IntegrationTester, 
+    _ = require("lodash"), 
+    assert = require("assert");
 
 var cfg = {
     "version": 1,
@@ -13,7 +13,7 @@ var cfg = {
 };
 
 module.exports.changeConfig = function(tester, key, value) {
-    var _cfg = _.clone(cfg);
+    var _cfg = _.clone(cfg, true);
     _cfg[key] = value;
     tester.rateLimiter.updateConfig(_cfg);
 };

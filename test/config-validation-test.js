@@ -4,7 +4,7 @@ var fs = require('fs'),
     http = require('http'),
     expect = require('expect.js'),
     assert = require("assert"),
-    _ = require("underscore")._,
+    _ = require("lodash"),
     limitsConfig = require("../lib/rate-limiter/limits-config"),
     schema = require("../lib/rate-limiter/limits-config-schema");
 
