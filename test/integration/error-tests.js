@@ -9,16 +9,28 @@ itUtils.describe("Integration tests - error-tests", function (tester) {
         itUtils.changeConfig(tester, key, value);
     }
 
-    it("should handle server errors", function(done) {
-		changeConfig("max_requests", 1);
+    it("should handle server errors: HPE_INVALID_STATUS", function (done) {
+        changeConfig("max_requests", 1);
 
-		tester.sendRequest().onForwarded(function() {
-			assert.equal(tester.rateLimiter.counter.getGlobal(), 1);
-			tester.failRequest().onFailed(function() {
-				assert.equal(tester.rateLimiter.counter.getGlobal(), 0);
-				done();
-			});
-		});
+        tester.sendRequest().onForwarded(function () {
+            assert.equal(tester.rateLimiter.counter.getGlobal(), 1);
+            tester.failRequestWithInvalidStatusCode().onFailed(function () {
+                assert.equal(tester.rateLimiter.counter.getGlobal(), 0);
+                done();
+            });
+        });
+    });
+
+    it("should handle server errors: HPE_INVALID_CONSTANT", function (done) {
+        changeConfig("max_requests", 1);
+
+        tester.sendRequest().onForwarded(function () {
+            assert.equal(tester.rateLimiter.counter.getGlobal(), 1);
+            tester.failRequestWithInvalidContentLength().onFailed(function () {
+                assert.equal(tester.rateLimiter.counter.getGlobal(), 0);
+                done();
+            });
+        });
     });
 
     it("should not fail if a 4xx response is served", function (done) {

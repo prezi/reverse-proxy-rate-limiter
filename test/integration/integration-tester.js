@@ -96,10 +96,22 @@ IntegrationTester.prototype = {
         return new ServedRequestWrapper(servedRequest);
     },
 
-    failRequest: function () {
+    failRequestWithInvalidStatusCode: function () {
         var lastServedRequest = this.requestBuffer.pop();
         var res = lastServedRequest.res;
         res.writeHead("invalid_status_code", {'Content-Type': 'text/plain'});
+        res.end();
+        return new FailedRequestWrapper(lastServedRequest);
+    },
+
+    failRequestWithInvalidContentLength: function () {
+        var lastServedRequest = this.requestBuffer.pop();
+        var res = lastServedRequest.res;
+        res.writeHead(200, {
+            'Content-Length': 0,
+            'Content-Type': 'text/plain'
+        });
+        res.write('obviously-nonzero-body');
         res.end();
         return new FailedRequestWrapper(lastServedRequest);
     },
@@ -182,7 +194,7 @@ function SentMessage(it, requestId, options) {
             onRejectedCallback(response);
         } else if (response && response.statusCode === HTTP_TOO_MANY_REQUESTS) {
             onRejectedCallback(response);
-        } else if (response && response.statusCode === HTTP_INTERNAL_SERVER_ERROR) {
+        } else if (error || (response && response.statusCode === HTTP_INTERNAL_SERVER_ERROR)) {
             onFailedCallback();
         }
     });
