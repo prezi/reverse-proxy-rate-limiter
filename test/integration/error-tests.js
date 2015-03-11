@@ -3,7 +3,7 @@
 var assert = require("assert"),
     itUtils = require('./integration-utils');
 
-itUtils.describe("Integration tests - error-tests", function(tester) {
+itUtils.describe("Integration tests - error-tests", function (tester) {
 
     function changeConfig(key, value) {
         itUtils.changeConfig(tester, key, value);
@@ -21,25 +21,25 @@ itUtils.describe("Integration tests - error-tests", function(tester) {
 		});
     });
 
-    it("should not fail if a 4xx response is served", function(done) {
+    it("should not fail if a 4xx response is served", function (done) {
         tester.sendRequest(1, {
             "expectedStatusCode": 401
         }).onForwarded(function() {
-	        itUtils.checkPendingRequestsCount(tester, 1);
-            tester.serveRequestWithStatusCode(401).onServed(function() {
-	            itUtils.checkPendingRequestsCount(tester, 0);
+            itUtils.checkPendingRequestsCount(tester, 1);
+            tester.serveRequestWithStatusCode(401).onServed(function () {
+                itUtils.checkPendingRequestsCount(tester, 0);
                 done();
             });
         });
     });
 
-    it("should not fail if a 5xx response is served", function(done) {
+    it("should not fail if a 5xx response is served", function (done) {
         tester.sendRequest(1, {
             "expectedStatusCode": 500
         }).onForwarded(function() {
-	        itUtils.checkPendingRequestsCount(tester, 1);
-            tester.serveRequestWithStatusCode(500).onServed(function() {
-	            itUtils.checkPendingRequestsCount(tester, 0);
+            itUtils.checkPendingRequestsCount(tester, 1);
+            tester.serveRequestWithStatusCode(500).onServed(function () {
+                itUtils.checkPendingRequestsCount(tester, 0);
                 done();
             });
         });
