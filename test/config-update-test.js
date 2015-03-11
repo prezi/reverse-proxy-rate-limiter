@@ -69,6 +69,12 @@ describe("Config change tests", function () {
         return cloned;
     }
 
+    function assertRequestCountsEqual(bucket, ip, expectedCounts) {
+        assert.equal(rl.counter.getGlobalRequestCount(), expectedCounts[0]);
+        assert.equal(rl.counter.getRequestCountForBucket(bucket), expectedCounts[1]);
+        assert.equal(rl.counter.getRequestCountForBucketAndIP(bucket, ip), expectedCounts[2]);
+    }
+
     var cfgWith2Buckets = cloneConfig(cfg);
     cfgWith2Buckets.buckets.push({
         "name": "test",
@@ -99,20 +105,20 @@ describe("Config change tests", function () {
         rl.counter.increment(rl.configuration.buckets[0], "dummy_ip");
 
         assert.equal(rl.configuration.buckets[0].capacityUnit, 2);
-        assert.deepEqual(rl.counter.get(rl.configuration.buckets[0], "dummy_ip"), [1, 1, 1]);
+        assert.equal(assertRequestCountsEqual(rl.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
 
         var cfg2 = cloneConfig(cfg);
         cfg2.buckets[0].limits.capacity_unit = 3;
         rl.updateConfig(cfg2);
 
         assert.equal(rl.configuration.buckets[0].capacityUnit, 3);
-        assert.deepEqual(rl.counter.get(rl.configuration.buckets[0], "dummy_ip"), [1, 1, 1]);
+        assert.deepEqual(assertRequestCountsEqual(rl.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
     });
 
     it("adding and removing buckets", function () {
         rl.counter.increment(rl.configuration.buckets[0], "dummy_ip");
         assert.equal(rl.configuration.buckets.length, 1);
-        assert.deepEqual(rl.counter.get(rl.configuration.buckets[0], "dummy_ip"), [1, 1, 1]);
+        assert.equal(assertRequestCountsEqual(rl.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
 
         rl.updateConfig(cfgWith2Buckets);
         assert.equal(rl.configuration.buckets.length, 2);
@@ -122,7 +128,7 @@ describe("Config change tests", function () {
         rl.updateConfig(cfg);
         assert.equal(rl.configuration.buckets.length, 1);
         assert.equal(rl.configuration.buckets[0].name, "default");
-        assert.deepEqual(rl.counter.get(rl.configuration.buckets[0], "dummy_ip"), [1, 1, 1]);
+        assert.equal(assertRequestCountsEqual(rl.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
     });
 
 });
