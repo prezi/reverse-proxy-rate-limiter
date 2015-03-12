@@ -64,7 +64,7 @@ itUtils.describe("Integration tests", function(tester) {
     });
 
     it("let everything in with default configuration", function(done) {
-        tester.rateLimiter.updateConfig(limitsConfig.defaultConfig);
+        tester.rateLimiter.evaluator.updateConfig(limitsConfig.defaultConfig);
 
         tester.sendRequest(100).onForwarded(function() {
             done();
