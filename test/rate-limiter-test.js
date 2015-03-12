@@ -3,6 +3,7 @@
 var expect = require('expect.js'),
     assert = require('assert'),
     rateLimiter = require("../lib/rate-limiter/"),
+    settings = require("../lib/rate-limiter/settings"),
     createTestRateLimiter = require('./helpers').createTestRateLimiter;
 
 describe("Default settings values", function () {
@@ -21,39 +22,39 @@ describe("Default settings values", function () {
     });
 
     it("should validate the options", function () {
-        var options = {
+        var testSettings = {
             forwardHost: "example.com",
             forwardPort: 9001,
             configEndpoint: "test_endpoint"
         };
-        expect(rl.validateOptions(options).configEndpoint).to.be("http://example.com:9001/test_endpoint");
+        expect(settings.updateDerivedSettings(testSettings).fullConfigEndpoint).to.be("http://example.com:9001/test_endpoint");
 
-        var options1 = {
+        var testSettings1 = {
             forwardHost: "example.com",
             forwardPort: 9001,
             configEndpoint: "/test_endpoint"
         };
-        expect(rl.validateOptions(options1).configEndpoint).to.be("http://example.com:9001/test_endpoint");
+        expect(settings.updateDerivedSettings(testSettings1).fullConfigEndpoint).to.be("http://example.com:9001/test_endpoint");
 
-        var options2 = {
+        var testSettings2 = {
             forwardHost: "example.com/",
             forwardPort: 9001,
             configEndpoint: "/test_endpoint"
         };
-        expect(rl.validateOptions(options2).configEndpoint).to.be("http://example.com/test_endpoint");
+        expect(settings.updateDerivedSettings(testSettings2).fullConfigEndpoint).to.be("http://example.com/test_endpoint");
 
-        var options3 = {
+        var testSettings3 = {
             forwardHost: "localhost",
             forwardPort: "9001",
             configEndpoint: "test_endpoint"
         };
-        expect(rl.validateOptions(options3).configEndpoint).to.be("http://localhost:9001/test_endpoint");
+        expect(settings.updateDerivedSettings(testSettings3).fullConfigEndpoint).to.be("http://localhost:9001/test_endpoint");
 
-        var options4 = {
+        var testSettings4 = {
             forwardHost: "localhost",
             forwardPort: "test",
             configEndpoint: "test_endpoint"
         };
-        expect(rl.validateOptions(options4).configEndpoint).to.be("http://localhost/test_endpoint");
+        expect(settings.updateDerivedSettings(testSettings4).fullConfigEndpoint).to.be("http://localhost/test_endpoint");
     });
 });
