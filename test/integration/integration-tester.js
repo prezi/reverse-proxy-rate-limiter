@@ -35,10 +35,13 @@ function IntegrationTester() {
 
     }).listen(this.forwardPort);
 
-    var settings = require('../../lib/rate-limiter/settings').load();
+    var settingsModule = require('../../lib/rate-limiter/settings');
+    var settings = settingsModule.load();
+
     settings.listenPort = this.listenPort;
     settings.forwardPort = this.forwardPort;
-    settings.configEndpoint = "file:./test/fixtures/example_configuration.json";
+    settings = settingsModule.updateDerivedSettings(settings);  // update the derived values
+    settings.fullConfigEndpoint = "file:./test/fixtures/example_configuration.json";
 
     this.rateLimiter = rateLimiter.createRateLimiter(settings);
 }
