@@ -1,0 +1,11 @@
+{
+    "version": 1,
+    "max_requests": 2,
+    "buffer_ratio": 0,
+    "buckets": [
+        {
+            "name": "default"
+        }
+    ]
+}
+
