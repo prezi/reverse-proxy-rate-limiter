@@ -19,6 +19,8 @@
         console.log(["request", req.url, status_code].join(" "))
     }
 
+    console.log("Starting mock server on localhost:7001");
+
     http.createServer(function (req, res) {
         if (req.url == "/sleep5secs/") {
             setTimeout(handler, 5000, req, res);
