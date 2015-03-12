@@ -10,11 +10,12 @@ describe("Default settings values", function () {
     var rl;
     before(function() {
         // the rateLimiter created by createTestRateLimiter does not start a proxy so it doesn't need to be terminated
-        rl = createTestRateLimiter({});
+        var s = settings.load();
+        rl = createTestRateLimiter(s);
     });
 
     it("config endpoint should be set to valid URL", function () {
-        expect(rl.getConfigEndpoint()).to.be("http://localhost:80/rate_limiter");
+        expect(rl.getConfigEndpoint()).to.be("http://localhost:8000/rate-limiter/");
     });
 
     it("should be 60000", function () {
