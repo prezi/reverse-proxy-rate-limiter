@@ -40,7 +40,7 @@ itUtils.describe("Integration tests", function(tester) {
 
 
     it("soft-hard limit testing", function(done) {
-        tester.rateLimiter.updateConfig(cfg2);
+        tester.rateLimiter.evaluator.updateConfig(cfg2);
 
         tester.sendRequest(8).onForwarded(function() {
             tester.sendRequest(1).onRejected(function() {
@@ -60,7 +60,7 @@ itUtils.describe("Integration tests", function(tester) {
     });
 
     it("bucket ratio test", function(done) {
-        tester.rateLimiter.updateConfig(cfg2);
+        tester.rateLimiter.evaluator.updateConfig(cfg2);
 
         tester.sendRequest(5, bucketBackup).onForwarded(function() { // 5 backup
             tester.sendRequest(5, bucketReuse).onForwarded(function() {
@@ -99,7 +99,7 @@ itUtils.describe("Integration tests", function(tester) {
 
 
     it("ip limit is enforced", function(done) {
-        tester.rateLimiter.updateConfig(maxRequestsPerIPConfig);
+        tester.rateLimiter.evaluator.updateConfig(maxRequestsPerIPConfig);
 
         tester.sendRequest(2, bucketDefault).onForwarded(function() {
             tester.sendRequest(1, bucketDefault).onRejected(function() {

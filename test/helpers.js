@@ -1,21 +1,21 @@
 "use strict";
 
-module.exports.createTestRateLimiter = createTestRateLimiter;
+module.exports.createTestLimitsEvaluator = createTestLimitsEvaluator;
 
 
-function createTestRateLimiter(options) {
-    var rateLimiter = require("../lib/rate-limiter/");
+function createTestLimitsEvaluator(options) {
+    var evaluator = require("../lib/rate-limiter/limits-evaluator");
     // returns a RateLimiter instance that neither initializes a config nor starts the proxy
 
-    function TestRateLimiter(options) {
-        rateLimiter.RateLimiter.call(this, options);
+    function TestLimitsEvaluator(options) {
+        evaluator.call(this, options);
     }
 
-    TestRateLimiter.prototype = Object.create(rateLimiter.RateLimiter.prototype);
-    TestRateLimiter.prototype.loadConfig = function () {
+    TestLimitsEvaluator.prototype = Object.create(evaluator.prototype);
+    TestLimitsEvaluator.prototype.loadConfig = function () {
     };
-    TestRateLimiter.prototype.initProxy = function () {
+    TestLimitsEvaluator.prototype.initProxy = function () {
     };
 
-    return new TestRateLimiter(options);
+    return new TestLimitsEvaluator(options);
 }

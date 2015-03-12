@@ -2,7 +2,7 @@
 
 var expect = require('expect.js'),
     fs = require('fs'),
-    helpers = require('./helpers'),
+    LimitsEvaluator = require('../lib/rate-limiter/limits-evaluator'),
     Bucket = require('../lib/rate-limiter/bucket').Bucket;
 
 describe("Bucket tests", function () {
@@ -43,20 +43,20 @@ describe("Bucket tests", function () {
         expect(bucket.matches(request)).to.be(false);
     });
 
-    var rl;
+    var evaluator;
 
     it("should choose the reuse bucket", function () {
-        var b = rl.getMatchingBucket({headers: {"x-prezi-client": "reuse-e5759ce4bb1c298b063f2d8aa1a334"}});
+        var b = evaluator.getMatchingBucket({headers: {"x-prezi-client": "reuse-e5759ce4bb1c298b063f2d8aa1a334"}});
         expect(b.name).to.be("reuse");
     });
     it("should choose the default bucket", function () {
-        var b = rl.getMatchingBucket();
+        var b = evaluator.getMatchingBucket();
         expect(b.name).to.be("default");
     });
 
     before(function () {
-        rl = helpers.createTestRateLimiter({});
-        rl.updateConfig(JSON.parse(fs.readFileSync("./test/fixtures/example_configuration.json")));
+        evaluator = new LimitsEvaluator({});
+        evaluator.updateConfig(JSON.parse(fs.readFileSync("./test/fixtures/example_configuration.json")));
     });
 
 });

@@ -4,12 +4,12 @@ var expect = require('expect.js'),
     assert = require('assert'),
     rateLimiter = require("../lib/rate-limiter/"),
     settings = require("../lib/rate-limiter/settings"),
-    createTestRateLimiter = require('./helpers').createTestRateLimiter;
+    createTestRateLimiter = require('./helpers').createTestLimitsEvaluator;
 
 describe("Default settings values", function () {
     var rl;
     before(function() {
-        // the rateLimiter created by createTestRateLimiter does not start a proxy so it doesn't need to be terminated
+        // the rateLimiter created by createTestLimitsEvaluator does not start a proxy so it doesn't need to be terminated
         var s = settings.load();
         rl = createTestRateLimiter(s);
     });

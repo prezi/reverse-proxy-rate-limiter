@@ -1,5 +1,5 @@
-var IntegrationTester = require("./integration-tester").IntegrationTester, 
-    _ = require("lodash"), 
+var IntegrationTester = require("./integration-tester").IntegrationTester,
+    _ = require("lodash"),
     assert = require("assert");
 
 var cfg = {
@@ -15,7 +15,7 @@ var cfg = {
 module.exports.changeConfig = function(tester, key, value) {
     var _cfg = _.clone(cfg, true);
     _cfg[key] = value;
-    tester.rateLimiter.updateConfig(_cfg);
+    tester.rateLimiter.evaluator.updateConfig(_cfg);
 };
 
 module.exports.describe = function(name, testingFunction) {
@@ -31,11 +31,11 @@ module.exports.describe = function(name, testingFunction) {
         });
 
         beforeEach(function(done) {
-            tester.rateLimiter.onConfigurationUpdated = function() {
-                tester.rateLimiter.onConfigurationUpdated = null;
+            tester.rateLimiter.evaluator.onConfigurationUpdated = function() {
+                tester.rateLimiter.evaluator.onConfigurationUpdated = null;
                 done();
             };
-            tester.rateLimiter.updateConfig(cfg);
+            tester.rateLimiter.evaluator.updateConfig(cfg);
         });
 
         afterEach(function(done) {
