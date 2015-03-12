@@ -5,46 +5,44 @@ var expect = require('expect.js'),
     assert = require('assert'),
     helpers = require('./helpers'),
     rateLimiter = require("../lib/rate-limiter/"),
-    createTestRateLimiter = require("./helpers").createTestRateLimiter;
+    LimitsEvaluator = require("../lib/rate-limiter/limits-evaluator"),
+    createTestLimitsEvaluator = require("./helpers").createTestLimitsEvaluator;
 
 describe("Initializing Ratelimiter with configuration", function () {
-    var rl;
+    var evaluator;
     beforeEach(function (done) {
         var settings = require('../lib/rate-limiter/settings').load();
         settings.fullConfigEndpoint = "file:./test/fixtures/example_configuration.json";
 
-        rl = new rateLimiter.RateLimiter(settings);
-        rl.onConfigurationUpdated = done;
-    });
-    afterEach(function (done) {
-        rl.close(done);
+        evaluator = new LimitsEvaluator(settings);
+        evaluator.onConfigurationUpdated = done;
     });
 
     it("should load required parameters", function () {
-        expect(rl.configuration.maxRequests).to.be(30);
-        expect(rl.configuration.maxRequestsWithoutBuffer).to.be(27);
-        expect(rl.configuration.bufferRatio).to.be(0.1);
-        expect(rl.configuration.healthcheckUrl).to.be("/healthcheck/");
+        expect(evaluator.configuration.maxRequests).to.be(30);
+        expect(evaluator.configuration.maxRequestsWithoutBuffer).to.be(27);
+        expect(evaluator.configuration.bufferRatio).to.be(0.1);
+        expect(evaluator.configuration.healthcheckUrl).to.be("/healthcheck/");
     });
 
     it("should load 3 buckets", function () {
-        expect(Object.keys(rl.configuration.buckets).length).to.be(3);
+        expect(Object.keys(evaluator.configuration.buckets).length).to.be(3);
     });
 
     it("should load default bucket", function () {
-        expect(rl.configuration.bucketsByName["default"].name).to.be("default");
-        expect(rl.configuration.bucketsByName["default"].capacityUnit).to.be(7);
-        expect(rl.configuration.bucketsByName["default"].maxRequests).to.be(19);
-        expect(rl.configuration.bucketsByName["default"].maxRequestsPerIp).to.be(5);
+        expect(evaluator.configuration.bucketsByName["default"].name).to.be("default");
+        expect(evaluator.configuration.bucketsByName["default"].capacityUnit).to.be(7);
+        expect(evaluator.configuration.bucketsByName["default"].maxRequests).to.be(19);
+        expect(evaluator.configuration.bucketsByName["default"].maxRequestsPerIp).to.be(5);
     });
 
 
     it("should load and configure all the buckets' limits", function () {
-        expect(rl.configuration.bucketsByName["default"].maxRequests).to.be(19);
-        expect(rl.configuration.bucketsByName["default"].maxRequestsPerIp).to.be(5);
+        expect(evaluator.configuration.bucketsByName["default"].maxRequests).to.be(19);
+        expect(evaluator.configuration.bucketsByName["default"].maxRequestsPerIp).to.be(5);
 
-        expect(rl.configuration.bucketsByName.reuse.maxRequests).to.be(6);
-        expect(rl.configuration.bucketsByName.backup.maxRequests).to.be(3);
+        expect(evaluator.configuration.bucketsByName.reuse.maxRequests).to.be(6);
+        expect(evaluator.configuration.bucketsByName.backup.maxRequests).to.be(3);
     });
 });
 
@@ -63,14 +61,13 @@ describe("Config change tests", function () {
     };
 
     function cloneConfig(cfg) {
-        var cloned = _.clone(cfg, true);
-        return cloned;
+        return _.clone(cfg, true);
     }
 
     function assertRequestCountsEqual(bucket, ip, expectedCounts) {
-        assert.equal(rl.counter.getGlobalRequestCount(), expectedCounts[0]);
-        assert.equal(rl.counter.getRequestCountForBucket(bucket), expectedCounts[1]);
-        assert.equal(rl.counter.getRequestCountForBucketAndIP(bucket, ip), expectedCounts[2]);
+        assert.equal(evaluator.counter.getGlobalRequestCount(), expectedCounts[0]);
+        assert.equal(evaluator.counter.getRequestCountForBucket(bucket), expectedCounts[1]);
+        assert.equal(evaluator.counter.getRequestCountForBucketAndIP(bucket, ip), expectedCounts[2]);
     }
 
     var cfgWith2Buckets = cloneConfig(cfg);
@@ -82,51 +79,51 @@ describe("Config change tests", function () {
         }
     });
 
-    var rl;
+    var evaluator;
     beforeEach(function () {
-        // the rateLimiter created by createTestRateLimiter does not start a proxy so it doesn't need to be terminated
-        rl = createTestRateLimiter({});
-        rl.updateConfig(cfg);
+        // the rateLimiter created by createTestLimitsEvaluator does not start a proxy so it doesn't need to be terminated
+        evaluator = createTestLimitsEvaluator({});
+        evaluator.updateConfig(cfg);
     });
 
     it("changing a bucket's config to have no limits it should have no limits", function () {
         var cfg2 = cloneConfig(cfg);
         cfg2.buckets[0] = {name: "default"};
-        assert.equal(rl.configuration.buckets[0].capacityUnit, 2);
+        assert.equal(evaluator.configuration.buckets[0].capacityUnit, 2);
 
-        rl.updateConfig(cfg2);
-        assert.equal(rl.configuration.buckets[0].capacityUnit, 0);
+        evaluator.updateConfig(cfg2);
+        assert.equal(evaluator.configuration.buckets[0].capacityUnit, 0);
     });
 
     it("changing the bucket's config should not change the request count", function () {
 
-        rl.counter.increment(rl.configuration.buckets[0], "dummy_ip");
+        evaluator.counter.increment(evaluator.configuration.buckets[0], "dummy_ip");
 
-        assert.equal(rl.configuration.buckets[0].capacityUnit, 2);
-        assert.equal(assertRequestCountsEqual(rl.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
+        assert.equal(evaluator.configuration.buckets[0].capacityUnit, 2);
+        assert.equal(assertRequestCountsEqual(evaluator.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
 
         var cfg2 = cloneConfig(cfg);
         cfg2.buckets[0].limits.capacity_unit = 3;
-        rl.updateConfig(cfg2);
+        evaluator.updateConfig(cfg2);
 
-        assert.equal(rl.configuration.buckets[0].capacityUnit, 3);
-        assert.deepEqual(assertRequestCountsEqual(rl.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
+        assert.equal(evaluator.configuration.buckets[0].capacityUnit, 3);
+        assert.deepEqual(assertRequestCountsEqual(evaluator.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
     });
 
     it("adding and removing buckets", function () {
-        rl.counter.increment(rl.configuration.buckets[0], "dummy_ip");
-        assert.equal(rl.configuration.buckets.length, 1);
-        assert.equal(assertRequestCountsEqual(rl.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
+        evaluator.counter.increment(evaluator.configuration.buckets[0], "dummy_ip");
+        assert.equal(evaluator.configuration.buckets.length, 1);
+        assert.equal(assertRequestCountsEqual(evaluator.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
 
-        rl.updateConfig(cfgWith2Buckets);
-        assert.equal(rl.configuration.buckets.length, 2);
-        assert.equal(rl.configuration.buckets[0].name, "test");
-        assert.equal(rl.configuration.buckets[1].name, "default");
+        evaluator.updateConfig(cfgWith2Buckets);
+        assert.equal(evaluator.configuration.buckets.length, 2);
+        assert.equal(evaluator.configuration.buckets[0].name, "test");
+        assert.equal(evaluator.configuration.buckets[1].name, "default");
 
-        rl.updateConfig(cfg);
-        assert.equal(rl.configuration.buckets.length, 1);
-        assert.equal(rl.configuration.buckets[0].name, "default");
-        assert.equal(assertRequestCountsEqual(rl.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
+        evaluator.updateConfig(cfg);
+        assert.equal(evaluator.configuration.buckets.length, 1);
+        assert.equal(evaluator.configuration.buckets[0].name, "default");
+        assert.equal(assertRequestCountsEqual(evaluator.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
     });
 
 });
