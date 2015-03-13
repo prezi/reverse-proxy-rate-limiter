@@ -2,7 +2,11 @@
 
 [![Build Status](https://magnum.travis-ci.com/prezi/reverse-proxy-rate-limiter.svg?token=C6T3YoEYndcatuyXax7y&branch=master)](https://magnum.travis-ci.com/prezi/reverse-proxy-rate-limiter)
 
-Reverse proxy written in Node.js that limits incoming requests based on their origin and the number of active concurrent requests.
+Reverse proxy written in Node.js that protects a backround service by limiting the incoming requests based on their origin and the number of active concurrent requests, still let's the service serve as many requests as it can.
+
+[How it works](https://raw.githubusercontent.com/prezi/reverse-proxy-rate-limiter/master/examples/how-it-works.png?token=ACH8iktHghfGrEfB_szOqGAPRjoVtSdBks5VC1LzwA%3D%3D)
+
+The rate-limiter uses the concept of buckets, that's basically a set of limitation rules we wan't to apply on a specific part of the incoming traffic. It will anaylize every request and find out which bucket it belongs to, than based on the rules it will decide if the request can be accepted or has to be rejected. The bucket is choosed by special headers.
 
 ## Installation
 Rate-limiter can be installed in a few seconds, let's check out our screencast about it:
@@ -99,7 +103,7 @@ $ curl localhost:7000/sleep5secs/ &
 Request has been rejected by the rate limiter[3]  + 25972 done
 ```
 
-You can see, that the rate-limiter didn't allow the 3rd request to go to the service.
+You can see, that the rate-limiter didn't allow the 3rd request to go to the service. This is basically the gist of how the rate-limiter will protect your service.
 
 ## JS-Hint
 * [How to install] (https://packagecontrol.io/packages/JSHint)
