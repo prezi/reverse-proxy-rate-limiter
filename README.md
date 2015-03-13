@@ -4,7 +4,7 @@
 
 Reverse proxy written in Node.js that protects a backround service by limiting the incoming requests based on their origin and the number of active concurrent requests, still let's the service serve as many requests as it can.
 
-[How it works](https://raw.githubusercontent.com/prezi/reverse-proxy-rate-limiter/master/examples/how-it-works.png?token=ACH8iktHghfGrEfB_szOqGAPRjoVtSdBks5VC1LzwA%3D%3D)
+![How it works](https://raw.githubusercontent.com/prezi/reverse-proxy-rate-limiter/master/examples/how-it-works.png?token=ACH8it15kS-54VlLDg8uFzYTpYGy4Q0cks5VDD1bwA%3D%3D)
 
 The rate-limiter uses the concept of buckets, that's basically a set of limitation rules we wan't to apply on a specific part of the incoming traffic. It will anaylize every request and find out which bucket it belongs to, than based on the rules it will decide if the request can be accepted or has to be rejected. The bucket is choosed by special headers.
 
