@@ -6,6 +6,7 @@ var fs = require('fs'),
     assert = require("assert"),
     _ = require("lodash"),
     limitsConfig = require("../lib/rate-limiter/limits-config"),
+    LimitsConfigurationLoader = require("../lib/rate-limiter/limits-config").LimitsConfigurationLoader,
     schema = require("../lib/rate-limiter/limits-config-schema");
 
 describe("Schema validator", function () {
@@ -104,7 +105,8 @@ describe("Load config from url", function () {
     });
 
     it("should load valid config", function (done) {
-        limitsConfig.loadConfig("http://localhost:9999/valid-config/", function (cfg) {
+        var limitsConfigurationLoader = new LimitsConfigurationLoader("http://localhost:9999/valid-config/");
+        limitsConfigurationLoader.load(function (cfg) {
             assert.equal(cfg.version, 1);
             assert.equal(cfg.max_requests, 30);
             assert.equal(cfg.buckets.length, 3);
@@ -113,21 +115,24 @@ describe("Load config from url", function () {
     });
 
     it("should handle invalid config", function (done) {
-        limitsConfig.loadConfig("http://localhost:9999/invalid-config/", function (cfg) {
+        var limitsConfigurationLoader = new LimitsConfigurationLoader("http://localhost:9999/invalid-config/");
+        limitsConfigurationLoader.load(function (cfg) {
             assert.equal(cfg, null);
             done();
         });
     });
 
     it("should handle 404 not found", function (done) {
-        limitsConfig.loadConfig("http://localhost:9999/404", function (cfg) {
+        var limitsConfigurationLoader = new LimitsConfigurationLoader("http://localhost:9999/404");
+        limitsConfigurationLoader.load(function (cfg) {
             assert.equal(cfg, null);
             done();
         });
     });
 
     it("should handle 500 internal server error", function (done) {
-        limitsConfig.loadConfig("http://localhost:9999/500", function (cfg) {
+        var limitsConfigurationLoader = new LimitsConfigurationLoader("http://localhost:9999/500");
+        limitsConfigurationLoader.load(function (cfg) {
             assert.equal(cfg, null);
             done();
         });
