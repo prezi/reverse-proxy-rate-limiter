@@ -1,6 +1,7 @@
 "use strict";
 
 module.exports.createTestLimitsEvaluator = createTestLimitsEvaluator;
+module.exports.getBucketByName = getBucketByName;
 
 
 function createTestLimitsEvaluator(options) {
@@ -18,4 +19,9 @@ function createTestLimitsEvaluator(options) {
     };
 
     return new TestLimitsEvaluator(options);
+}
+
+function getBucketByName(buckets, name) {
+    var filteredBuckets = buckets.filter(function (bucket) { return bucket.name == name});
+    return filteredBuckets[0];
 }

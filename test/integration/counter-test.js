@@ -1,6 +1,7 @@
 "use strict";
 
 var assert = require("assert"),
+    helpers = require("./../helpers"),
 	itUtils = require('./integration-utils');
 
 itUtils.describe("counter consistency test", function(tester) {
@@ -27,7 +28,8 @@ itUtils.describe("counter consistency test", function(tester) {
     });
 
     function getCountForBucket(ratelimiter, bucketName) {
-        return ratelimiter.evaluator.counter.getRequestCountForBucket(tester.rateLimiter.evaluator.configuration.bucketsByName[bucketName]);
+        var bucket = helpers.getBucketByName(tester.rateLimiter.evaluator.configuration.buckets, bucketName);
+        return ratelimiter.evaluator.counter.getRequestCountForBucket(bucket);
     }
 
     it("counter consistency: two in, two served", function (done) {

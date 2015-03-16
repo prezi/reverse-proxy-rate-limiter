@@ -30,19 +30,20 @@ describe("Initializing Ratelimiter with configuration", function () {
     });
 
     it("should load default bucket", function () {
-        expect(evaluator.configuration.bucketsByName["default"].name).to.be("default");
-        expect(evaluator.configuration.bucketsByName["default"].capacityUnit).to.be(7);
-        expect(evaluator.configuration.bucketsByName["default"].maxRequests).to.be(19);
-        expect(evaluator.configuration.bucketsByName["default"].maxRequestsPerIp).to.be(5);
+        var defaultBucket = helpers.getBucketByName(evaluator.configuration.buckets, "default");
+
+        expect(defaultBucket.name).to.be("default");
+        expect(defaultBucket.capacityUnit).to.be(7);
+        expect(defaultBucket.maxRequests).to.be(19);
+        expect(defaultBucket.maxRequestsPerIp).to.be(5);
     });
 
-
     it("should load and configure all the buckets' limits", function () {
-        expect(evaluator.configuration.bucketsByName["default"].maxRequests).to.be(19);
-        expect(evaluator.configuration.bucketsByName["default"].maxRequestsPerIp).to.be(5);
+        expect(helpers.getBucketByName(evaluator.configuration.buckets, "default").maxRequests).to.be(19);
+        expect(helpers.getBucketByName(evaluator.configuration.buckets, "default").maxRequestsPerIp).to.be(5);
 
-        expect(evaluator.configuration.bucketsByName.reuse.maxRequests).to.be(6);
-        expect(evaluator.configuration.bucketsByName.backup.maxRequests).to.be(3);
+        expect(helpers.getBucketByName(evaluator.configuration.buckets, "reuse").maxRequests).to.be(6);
+        expect(helpers.getBucketByName(evaluator.configuration.buckets, "backup").maxRequests).to.be(3);
     });
 });
 
