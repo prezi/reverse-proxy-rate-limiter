@@ -4,12 +4,12 @@ module.exports.createTestLimitsEvaluator = createTestLimitsEvaluator;
 module.exports.getBucketByName = getBucketByName;
 
 
-function createTestLimitsEvaluator(options) {
+function createTestLimitsEvaluator(settings) {
     var evaluator = require("../lib/rate-limiter/limits-evaluator");
     // returns a RateLimiter instance that neither initializes a config nor starts the proxy
 
-    function TestLimitsEvaluator(options) {
-        evaluator.call(this, options);
+    function TestLimitsEvaluator(settings) {
+        evaluator.call(this, settings);
     }
 
     TestLimitsEvaluator.prototype = Object.create(evaluator.prototype);
@@ -18,7 +18,7 @@ function createTestLimitsEvaluator(options) {
     TestLimitsEvaluator.prototype.initProxy = function () {
     };
 
-    return new TestLimitsEvaluator(options);
+    return new TestLimitsEvaluator(settings);
 }
 
 function getBucketByName(buckets, name) {
