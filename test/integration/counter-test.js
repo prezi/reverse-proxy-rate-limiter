@@ -28,7 +28,7 @@ itUtils.describe("counter consistency test", function(tester) {
     });
 
     function getCountForBucket(ratelimiter, bucketName) {
-        var bucket = helpers.getBucketByName(tester.rateLimiter.evaluator.configuration.buckets, bucketName);
+        var bucket = helpers.getBucketByName(tester.rateLimiter.evaluator.limitsConfiguration.buckets, bucketName);
         return ratelimiter.evaluator.counter.getRequestCountForBucket(bucket);
     }
 

@@ -8,7 +8,7 @@ var expect = require('expect.js'),
     LimitsEvaluator = require("../lib/rate-limiter/limits-evaluator"),
     createTestLimitsEvaluator = require("./helpers").createTestLimitsEvaluator;
 
-describe("Initializing Ratelimiter with configuration", function () {
+describe("Initializing Ratelimiter with limitsConfiguration", function () {
     var evaluator;
     beforeEach(function (done) {
         var settings = require('../lib/rate-limiter/settings').load();
@@ -19,18 +19,18 @@ describe("Initializing Ratelimiter with configuration", function () {
     });
 
     it("should load required parameters", function () {
-        expect(evaluator.configuration.maxRequests).to.be(30);
-        expect(evaluator.configuration.maxRequestsWithoutBuffer).to.be(27);
-        expect(evaluator.configuration.bufferRatio).to.be(0.1);
-        expect(evaluator.configuration.healthcheckUrl).to.be("/healthcheck/");
+        expect(evaluator.limitsConfiguration.maxRequests).to.be(30);
+        expect(evaluator.limitsConfiguration.maxRequestsWithoutBuffer).to.be(27);
+        expect(evaluator.limitsConfiguration.bufferRatio).to.be(0.1);
+        expect(evaluator.limitsConfiguration.healthcheckUrl).to.be("/healthcheck/");
     });
 
     it("should load 3 buckets", function () {
-        expect(Object.keys(evaluator.configuration.buckets).length).to.be(3);
+        expect(Object.keys(evaluator.limitsConfiguration.buckets).length).to.be(3);
     });
 
     it("should load default bucket", function () {
-        var defaultBucket = helpers.getBucketByName(evaluator.configuration.buckets, "default");
+        var defaultBucket = helpers.getBucketByName(evaluator.limitsConfiguration.buckets, "default");
 
         expect(defaultBucket.name).to.be("default");
         expect(defaultBucket.capacityUnit).to.be(7);
@@ -39,11 +39,11 @@ describe("Initializing Ratelimiter with configuration", function () {
     });
 
     it("should load and configure all the buckets' limits", function () {
-        expect(helpers.getBucketByName(evaluator.configuration.buckets, "default").maxRequests).to.be(19);
-        expect(helpers.getBucketByName(evaluator.configuration.buckets, "default").maxRequestsPerIp).to.be(5);
+        expect(helpers.getBucketByName(evaluator.limitsConfiguration.buckets, "default").maxRequests).to.be(19);
+        expect(helpers.getBucketByName(evaluator.limitsConfiguration.buckets, "default").maxRequestsPerIp).to.be(5);
 
-        expect(helpers.getBucketByName(evaluator.configuration.buckets, "reuse").maxRequests).to.be(6);
-        expect(helpers.getBucketByName(evaluator.configuration.buckets, "backup").maxRequests).to.be(3);
+        expect(helpers.getBucketByName(evaluator.limitsConfiguration.buckets, "reuse").maxRequests).to.be(6);
+        expect(helpers.getBucketByName(evaluator.limitsConfiguration.buckets, "backup").maxRequests).to.be(3);
     });
 });
 
@@ -90,41 +90,41 @@ describe("Config change tests", function () {
     it("changing a bucket's config to have no limits it should have no limits", function () {
         var cfg2 = cloneConfig(cfg);
         cfg2.buckets[0] = {name: "default"};
-        assert.equal(evaluator.configuration.buckets[0].capacityUnit, 2);
+        assert.equal(evaluator.limitsConfiguration.buckets[0].capacityUnit, 2);
 
         evaluator.updateConfig(cfg2);
-        assert.equal(evaluator.configuration.buckets[0].capacityUnit, 0);
+        assert.equal(evaluator.limitsConfiguration.buckets[0].capacityUnit, 0);
     });
 
     it("changing the bucket's config should not change the request count", function () {
 
-        evaluator.counter.increment(evaluator.configuration.buckets[0], "dummy_ip");
+        evaluator.counter.increment(evaluator.limitsConfiguration.buckets[0], "dummy_ip");
 
-        assert.equal(evaluator.configuration.buckets[0].capacityUnit, 2);
-        assert.equal(assertRequestCountsEqual(evaluator.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
+        assert.equal(evaluator.limitsConfiguration.buckets[0].capacityUnit, 2);
+        assert.equal(assertRequestCountsEqual(evaluator.limitsConfiguration.buckets[0], "dummy_ip", [1, 1, 1]));
 
         var cfg2 = cloneConfig(cfg);
         cfg2.buckets[0].limits.capacity_unit = 3;
         evaluator.updateConfig(cfg2);
 
-        assert.equal(evaluator.configuration.buckets[0].capacityUnit, 3);
-        assert.deepEqual(assertRequestCountsEqual(evaluator.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
+        assert.equal(evaluator.limitsConfiguration.buckets[0].capacityUnit, 3);
+        assert.deepEqual(assertRequestCountsEqual(evaluator.limitsConfiguration.buckets[0], "dummy_ip", [1, 1, 1]));
     });
 
     it("adding and removing buckets", function () {
-        evaluator.counter.increment(evaluator.configuration.buckets[0], "dummy_ip");
-        assert.equal(evaluator.configuration.buckets.length, 1);
-        assert.equal(assertRequestCountsEqual(evaluator.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
+        evaluator.counter.increment(evaluator.limitsConfiguration.buckets[0], "dummy_ip");
+        assert.equal(evaluator.limitsConfiguration.buckets.length, 1);
+        assert.equal(assertRequestCountsEqual(evaluator.limitsConfiguration.buckets[0], "dummy_ip", [1, 1, 1]));
 
         evaluator.updateConfig(cfgWith2Buckets);
-        assert.equal(evaluator.configuration.buckets.length, 2);
-        assert.equal(evaluator.configuration.buckets[0].name, "test");
-        assert.equal(evaluator.configuration.buckets[1].name, "default");
+        assert.equal(evaluator.limitsConfiguration.buckets.length, 2);
+        assert.equal(evaluator.limitsConfiguration.buckets[0].name, "test");
+        assert.equal(evaluator.limitsConfiguration.buckets[1].name, "default");
 
         evaluator.updateConfig(cfg);
-        assert.equal(evaluator.configuration.buckets.length, 1);
-        assert.equal(evaluator.configuration.buckets[0].name, "default");
-        assert.equal(assertRequestCountsEqual(evaluator.configuration.buckets[0], "dummy_ip", [1, 1, 1]));
+        assert.equal(evaluator.limitsConfiguration.buckets.length, 1);
+        assert.equal(evaluator.limitsConfiguration.buckets[0].name, "default");
+        assert.equal(assertRequestCountsEqual(evaluator.limitsConfiguration.buckets[0], "dummy_ip", [1, 1, 1]));
     });
 
 });
