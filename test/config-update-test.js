@@ -6,7 +6,9 @@ var expect = require('expect.js'),
     helpers = require('./helpers'),
     rateLimiter = require("../lib/reverse-proxy-rate-limiter/"),
     LimitsEvaluator = require("../lib/reverse-proxy-rate-limiter/limits-evaluator"),
-    createTestLimitsEvaluator = require("./helpers").createTestLimitsEvaluator;
+    createTestLimitsEvaluator = require("./helpers").createTestLimitsEvaluator,
+    TestLimitsConfigurationLoader = require("./helpers").TestLimitsConfigurationLoader;
+
 
 describe("Initializing Ratelimiter with limitsConfiguration", function () {
     var evaluator;
@@ -44,6 +46,19 @@ describe("Initializing Ratelimiter with limitsConfiguration", function () {
 
         expect(helpers.getBucketByName(evaluator.limitsConfiguration.buckets, "reuse").maxRequests).to.be(6);
         expect(helpers.getBucketByName(evaluator.limitsConfiguration.buckets, "backup").maxRequests).to.be(3);
+    });
+
+    it("should fall back to default limits configuration if loading of configuration failed", function () {
+        evaluator.limitConfigurationLoader = new TestLimitsConfigurationLoader("dumy_endpoint");
+        evaluator.limitsConfiguration = null;
+
+        evaluator.loadConfig();
+
+        expect(evaluator.limitsConfiguration.maxRequests).to.be(0);
+        expect(evaluator.limitsConfiguration.maxRequestsWithoutBuffer).to.be(0);
+        expect(evaluator.limitsConfiguration.bufferRatio).to.be(0);
+        expect(evaluator.limitsConfiguration.buckets.length).to.be(1);
+        expect(evaluator.limitsConfiguration.buckets[0].name).to.be("default");
     });
 });
 

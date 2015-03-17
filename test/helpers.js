@@ -1,7 +1,10 @@
 "use strict";
 
+var limitsConfigurationLoader = require("../lib/reverse-proxy-rate-limiter/limits-config").LimitsConfigurationLoader;
+
 module.exports.createTestLimitsEvaluator = createTestLimitsEvaluator;
 module.exports.getBucketByName = getBucketByName;
+module.exports.TestLimitsConfigurationLoader = TestLimitsConfigurationLoader;
 
 
 function createTestLimitsEvaluator(settings) {
@@ -20,6 +23,16 @@ function createTestLimitsEvaluator(settings) {
 
     return new TestLimitsEvaluator(settings);
 }
+
+function TestLimitsConfigurationLoader(fullConfigEndpoint) {
+
+    function TestLimitsConfigurationLoader(settings) {
+        limitsConfigurationLoader.call(this, fullConfigEndpoint);
+    }
+}
+
+TestLimitsConfigurationLoader.prototype = Object.create(limitsConfigurationLoader.prototype);
+TestLimitsConfigurationLoader.prototype.load = function (callback) { callback(null); };
 
 function getBucketByName(buckets, name) {
     var filteredBuckets = buckets.filter(function (bucket) { return bucket.name == name});
