@@ -2,8 +2,8 @@
 
 var expect = require('expect.js'),
     fs = require('fs'),
-    LimitsEvaluator = require('../lib/rate-limiter/limits-evaluator'),
-    Bucket = require('../lib/rate-limiter/bucket').Bucket;
+    LimitsEvaluator = require('../lib/reverse-proxy-rate-limiter/limits-evaluator'),
+    Bucket = require('../lib/reverse-proxy-rate-limiter/bucket').Bucket;
 
 describe("Bucket tests", function () {
     var request = {

@@ -5,7 +5,7 @@ module.exports.getBucketByName = getBucketByName;
 
 
 function createTestLimitsEvaluator(settings) {
-    var evaluator = require("../lib/rate-limiter/limits-evaluator");
+    var evaluator = require("../lib/reverse-proxy-rate-limiter/limits-evaluator");
     // returns a RateLimiter instance that neither initializes a config nor starts the proxy
 
     function TestLimitsEvaluator(settings) {

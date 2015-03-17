@@ -2,8 +2,8 @@
 
 var expect = require('expect.js'),
     assert = require('assert'),
-    rateLimiter = require("../lib/rate-limiter/"),
-    settings = require("../lib/rate-limiter/settings"),
+    rateLimiter = require("../lib/reverse-proxy-rate-limiter/"),
+    settings = require("../lib/reverse-proxy-rate-limiter/settings"),
     createTestRateLimiter = require('./helpers').createTestLimitsEvaluator;
 
 describe("Default settings values", function () {

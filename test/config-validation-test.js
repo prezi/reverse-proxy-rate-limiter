@@ -5,9 +5,9 @@ var fs = require('fs'),
     expect = require('expect.js'),
     assert = require("assert"),
     _ = require("lodash"),
-    limitsConfig = require("../lib/rate-limiter/limits-config"),
-    LimitsConfigurationLoader = require("../lib/rate-limiter/limits-config").LimitsConfigurationLoader,
-    schema = require("../lib/rate-limiter/limits-config-schema");
+    limitsConfig = require("../lib/reverse-proxy-rate-limiter/limits-config"),
+    LimitsConfigurationLoader = require("../lib/reverse-proxy-rate-limiter/limits-config").LimitsConfigurationLoader,
+    schema = require("../lib/reverse-proxy-rate-limiter/limits-config-schema");
 
 describe("Schema validator", function () {
     it("should accept valid config", function () {

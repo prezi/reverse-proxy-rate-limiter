@@ -35,7 +35,7 @@ function IntegrationTester() {
 
     }).listen(this.forwardPort);
 
-    var settingsModule = require('../../lib/rate-limiter/settings');
+    var settingsModule = require('../../lib/reverse-proxy-rate-limiter/settings');
     var settings = settingsModule.load();
 
     settings.listenPort = this.listenPort;

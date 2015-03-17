@@ -1,9 +1,9 @@
 "use strict";
 
 var expect = require('expect.js'),
-    Condition = require("../lib/rate-limiter/conditions/conditions").Condition,
-    Predicates = require("../lib/rate-limiter/conditions/predicates").Predicates,
-    SubjectTypes = require("../lib/rate-limiter/conditions/subject-types").SubjectTypes;
+    Condition = require("../lib/reverse-proxy-rate-limiter/conditions/conditions").Condition,
+    Predicates = require("../lib/reverse-proxy-rate-limiter/conditions/predicates").Predicates,
+    SubjectTypes = require("../lib/reverse-proxy-rate-limiter/conditions/subject-types").SubjectTypes;
 
 describe("Condition parameter validation tests", function () {
     it("should throw an exception because parameter is not an array", function () {

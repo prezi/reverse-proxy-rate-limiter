@@ -1,7 +1,7 @@
 "use strict";
 
 var assert = require("assert"),
-    CounterStore = require("../lib/rate-limiter/counter.js").CounterStore;
+    CounterStore = require("../lib/reverse-proxy-rate-limiter/counter.js").CounterStore;
 
 describe("CounterStore tests", function () {
     var cs;

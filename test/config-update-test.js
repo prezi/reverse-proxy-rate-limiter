@@ -4,14 +4,14 @@ var expect = require('expect.js'),
     _ = require("lodash"),
     assert = require('assert'),
     helpers = require('./helpers'),
-    rateLimiter = require("../lib/rate-limiter/"),
-    LimitsEvaluator = require("../lib/rate-limiter/limits-evaluator"),
+    rateLimiter = require("../lib/reverse-proxy-rate-limiter/"),
+    LimitsEvaluator = require("../lib/reverse-proxy-rate-limiter/limits-evaluator"),
     createTestLimitsEvaluator = require("./helpers").createTestLimitsEvaluator;
 
 describe("Initializing Ratelimiter with limitsConfiguration", function () {
     var evaluator;
     beforeEach(function (done) {
-        var settings = require('../lib/rate-limiter/settings').load();
+        var settings = require('../lib/reverse-proxy-rate-limiter/settings').load();
         settings.fullConfigEndpoint = "file:./test/fixtures/example_configuration.json";
 
         evaluator = new LimitsEvaluator(settings);

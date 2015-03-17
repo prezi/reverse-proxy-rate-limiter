@@ -3,7 +3,7 @@
 var http = require('http'),
     assert = require('assert'),
     helpers = require('./helpers'),
-    ipResolver = require('../lib/rate-limiter/ipresolver');
+    ipResolver = require('../lib/reverse-proxy-rate-limiter/ipresolver');
 
 var EXPECTED = "expected";
 var ACTUAL = "actual";

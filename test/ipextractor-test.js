@@ -1,6 +1,6 @@
 "use strict";
 
-var IPExtractor = require("../lib/rate-limiter/ipextractor").IPExtractor;
+var IPExtractor = require("../lib/reverse-proxy-rate-limiter/ipextractor").IPExtractor;
 var assert = require('assert');
 
 describe("IP Extracting",function(){

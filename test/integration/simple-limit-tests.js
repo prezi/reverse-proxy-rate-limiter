@@ -1,6 +1,6 @@
 "use strict";
 
-var limitsConfig = require("../../lib/rate-limiter/limits-config"),
+var limitsConfig = require("../../lib/reverse-proxy-rate-limiter/limits-config"),
     itUtils = require('./integration-utils');
 
 itUtils.describe("Integration tests", function(tester) {
