@@ -56,7 +56,7 @@ describe("Client IP tests", function () {
             res.setHeader("Connection", "close");
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end();
-        }).listen(PORT);
+        }).listen(PORT, HOST);
     });
 
     after(function (done) {
