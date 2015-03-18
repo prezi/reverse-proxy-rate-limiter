@@ -3,6 +3,7 @@
 var expect = require('expect.js'),
     fs = require('fs'),
     LimitsEvaluator = require('../lib/reverse-proxy-rate-limiter/limits-evaluator'),
+    EventEmitter = require('events').EventEmitter,
     Bucket = require('../lib/reverse-proxy-rate-limiter/bucket').Bucket;
 
 describe("Bucket tests", function () {
@@ -55,7 +56,7 @@ describe("Bucket tests", function () {
     });
 
     before(function () {
-        evaluator = new LimitsEvaluator({});
+        evaluator = new LimitsEvaluator({}, new EventEmitter());
         evaluator.updateConfig(JSON.parse(fs.readFileSync("./test/fixtures/example_configuration.json")));
     });
 

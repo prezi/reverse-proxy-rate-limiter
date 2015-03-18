@@ -11,8 +11,10 @@ function createTestLimitsEvaluator(settings) {
     var evaluator = require("../lib/reverse-proxy-rate-limiter/limits-evaluator");
     // returns a RateLimiter instance that neither initializes a config nor starts the proxy
 
+    var EventEmitter = require('events').EventEmitter;
+
     function TestLimitsEvaluator(settings) {
-        evaluator.call(this, settings);
+        evaluator.call(this, settings, new EventEmitter());
     }
 
     TestLimitsEvaluator.prototype = Object.create(evaluator.prototype);

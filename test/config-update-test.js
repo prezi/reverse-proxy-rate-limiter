@@ -6,9 +6,9 @@ var expect = require('expect.js'),
     helpers = require('./helpers'),
     rateLimiter = require("../lib/reverse-proxy-rate-limiter/"),
     LimitsEvaluator = require("../lib/reverse-proxy-rate-limiter/limits-evaluator"),
+    EventEmitter = require('events').EventEmitter,
     createTestLimitsEvaluator = require("./helpers").createTestLimitsEvaluator,
     TestLimitsConfigurationLoader = require("./helpers").TestLimitsConfigurationLoader;
-
 
 describe("Initializing Ratelimiter with limitsConfiguration", function () {
     var evaluator;
@@ -16,7 +16,7 @@ describe("Initializing Ratelimiter with limitsConfiguration", function () {
         var settings = require('../lib/reverse-proxy-rate-limiter/settings').load();
         settings.fullConfigEndpoint = "file:./test/fixtures/example_configuration.json";
 
-        evaluator = new LimitsEvaluator(settings);
+        evaluator = new LimitsEvaluator(settings, new EventEmitter());
         evaluator.onConfigurationUpdated = done;
     });
 
