@@ -117,13 +117,11 @@ Request has been rejected by the rate limiter[3]  + 25972 done
 
 You can see, that the rate-limiter didn't allow the 3rd request to go to the service. This is basically the gist of how the rate-limiter will protect your service.
 
-## JS-Hint
-* [How to install] (https://packagecontrol.io/packages/JSHint)
-* To add options to the current configurations open 'package.json' and add your options under 'jshintConfig'.
-
 ## Configuration
+There are two types of configuration in the context of the `reverse-proxy-rate-limiter`. One configures the reverse proxy itself, the other one configures the buckets and their limits. To avoid confusion, we refer to the former as “settings” and the latter as “limits configuration”.
 
-There are 5 levels of configuration sources (all but the first one optional). From lowest to highest priority:
+### Settings
+There are 5 levels of sources for the settings (all but the first one optional). From lowest to highest priority:
 
  * Default configuration values hard-coded in `lib/rate-limiter/settings.js`
  * `$PWD/config/default.json` if it exists
@@ -134,3 +132,10 @@ There are 5 levels of configuration sources (all but the first one optional). Fr
  * The first parameter to `lib/rate-limiter/settings.js#load` is an optional string which is the path to
    a configuration file. If run through `lib/rate-limiter/boot.js` (used by `start-rate-limiter.js`), the
    command-line argument `--config` (or just `-c`) is passed in here.
+
+### Limits Configuration
+The limits configuration is periodically loaded by the `reverse-proxy-rate-limiter` from a file or the backend service behind the rate-limiter. The exact path or URL is determined in the settings (it defaults to `<listenHost>:<listenPort>/rate-limiter`). An example limits configuration can be found [here](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/test/fixtures/example_configuration.json).
+
+## JS-Hint
+* [How to install] (https://packagecontrol.io/packages/JSHint)
+* To add options to the current configurations open 'package.json' and add your options under 'jshintConfig'.
