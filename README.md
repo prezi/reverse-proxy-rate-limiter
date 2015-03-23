@@ -138,7 +138,8 @@ The limits configuration is periodically loaded by the `reverse-proxy-rate-limit
 
 ## Contribution
 Pull requests are very welcome. For discussions, please head over to the [mailing list](https://groups.google.com/forum/#!forum/reverse-proxy-rate-limiter-dev).
-We have a [JSHint]((https://packagecontrol.io/packages/JSHint) configuration in place that can help with polishing your code.
+
+We have a [JSHint](https://packagecontrol.io/packages/JSHint) configuration in place that can help with polishing your code.
 
 ## License
 `reverse-proxy-rate-limiter` is available under the [Apache License, Version 2.0](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/LICENSE).
