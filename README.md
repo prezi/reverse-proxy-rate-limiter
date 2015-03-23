@@ -7,11 +7,18 @@
 ## Usecase
 Web services are often used by very different types of clients. If we imagine a service storing presentations, there could be users loading presentations in their browser and perhaps a search service that would like to index the content of the presentations. In this scenario, the requests from the user wanting to present is much more important than the one from the search service - the latter can wait and come back if it couldn’t retrieve presentations, but the user cannot.
 
-The `reverse-proxy-rate-limiter` helps with managing such a situation. Standing between the clients and the service providing presentations, it ensures that the search service won’t consume capacity that is needed for serving requests from the users and that it won’t overload it as a whole.
+The `reverse-proxy-rate-limiter` helps with managing such a situation. Standing between the clients and the service providing presentations, it ensures that the search service won’t consume capacity that is needed for serving requests from the users. The specific capacity that is required for serving user traffic is computed dynamically. If users would stop requesting presentations from this service, the search service would automatically be enabled to consume of all of the service’s capacity.
+
+## Rate-limiting concept
 
 ![How it works](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/examples/how-it-works.png?raw=true)
 
-The `reverse-proxy-rate-limiter` prioritizes requests from different clients by assigning them to different buckets (shown in red and blue in the figure above) based on HTTP headers. A bucket is basically a set of limitation rules that we want to apply on traffic that we mapped to the bucket. Based on those rules and the active requests both in the bucket and overall service, a request will be forwarded to the service or rejected (indicated with the `429` status code in the figure).
+### Buckets
+The `reverse-proxy-rate-limiter` prioritizes requests from different clients by assigning them to different buckets (shown as red and blue slots within the rate-limiter in the figure above) based on HTTP headers. A bucket is basically a set of limitation rules that we want to apply on traffic that we mapped to a bucket. Based on those rules and the active requests both in the bucket and overall service, a request will be forwarded to the service or rejected (indicated with the `429` status code in the figure). Buckets expand beyond their designated capacity if other buckets are not fully consuming their capacity. For example, if the blue client above would stop sending requests, the red client would eventually be able to fill most of the slots so that none of its requests would be rejected.
+
+### Concurrent Active Requests
+Many rate-limiting solutions reject requests based on the number of incoming requests. This is not an effective measure if the service is handling requests that take different amounts of time to be processed. 100 requests/second might be fine if the requests are processed within 10ms, but not so much if they take 1000ms each.
+Instead of this approach, the `reverse-proxy-rate-limiter` limits incoming traffic based on the number of requests that are already handled concurrently by the backend service.
 
 ## Installation
 Rate-limiter can be installed in a few seconds, let's check out our screencast about it:
