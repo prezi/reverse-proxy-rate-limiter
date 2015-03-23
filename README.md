@@ -20,7 +20,7 @@ The `reverse-proxy-rate-limiter` prioritizes requests from different clients by 
 Many rate-limiting solutions reject requests based on the number of incoming requests. This is not an effective measure if the service is handling requests that take different amounts of time to be processed. 100 requests/second might be fine if the requests are processed within 10ms, but not so much if they take 1000ms each.
 Instead of this approach, the `reverse-proxy-rate-limiter` limits incoming traffic based on the number of requests that are already handled concurrently by the backend service.
 
-## Installation
+## Getting started
 `reverse-proxy-rate-limiter` can be installed in a few seconds, let's check out our screencast about it:
 
 [![Installation screencast](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/examples/screencast.png?raw=true)](https://asciinema.org/a/17616)
