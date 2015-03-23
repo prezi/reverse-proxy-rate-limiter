@@ -123,14 +123,14 @@ There are two types of configuration in the context of the `reverse-proxy-rate-l
 ### Settings
 There are 5 levels of sources for the settings (all but the first one optional). From lowest to highest priority:
 
- * Default configuration values hard-coded in `lib/rate-limiter/settings.js`
+ * Default settings values hard-coded in `lib/reverse-proxy-rate-limiter/settings.js`
  * `$PWD/config/default.json` if it exists
  * `$PWD/config/$NODE_ENV.json` if it exists
- * The second parameter to `lib/rate-limiter/settings.js#load` is an optional function which gets called with
+ * The second parameter to `lib/reverse-proxy-rate-limiter/settings.js#load` is an optional function which gets called with
    a `ConfigBuilder` instance as its only argument. It can make `add{Obj,File,Dir}` calls on it to add
    any custom config sources.
- * The first parameter to `lib/rate-limiter/settings.js#load` is an optional string which is the path to
-   a configuration file. If run through `lib/rate-limiter/boot.js` (used by `start-rate-limiter.js`), the
+ * The first parameter to `lib/reverse-proxy-rate-limiter/settings.js#load` is an optional string which is the path to
+   a settings file. If called from `lib/reverse-proxy-rate-limiter/settings.js#init` (used by `start-rate-limiter.js`), the
    command-line argument `--config` (or just `-c`) is passed in here.
 
 ### Limits Configuration
