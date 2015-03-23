@@ -136,6 +136,9 @@ There are 5 levels of sources for the settings (all but the first one optional).
 ### Limits Configuration
 The limits configuration is periodically loaded by the `reverse-proxy-rate-limiter` from a file or the backend service behind the rate-limiter. The exact path or URL is determined in the settings (it defaults to `<listenHost>:<listenPort>/rate-limiter`). An example limits configuration can be found [here](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/test/fixtures/example_configuration.json).
 
+## Naught integration
+The `reverse-proxy-rate-limiter` can be wrapped with [naught](https://github.com/andrewrk/naught) so it supports zero downtime deployment and automatic restarts if the nodejs process dies.
+
 ## Contribution
 Pull requests are very welcome. For discussions, please head over to the [mailing list](https://groups.google.com/forum/#!forum/reverse-proxy-rate-limiter-dev).
 
