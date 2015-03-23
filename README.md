@@ -9,14 +9,14 @@ Web services are often used by very different types of clients. If we imagine a 
 
 The `reverse-proxy-rate-limiter` helps with managing such a situation. Standing between the clients and the service providing presentations, it ensures that the search service won’t consume capacity that is needed for serving requests from the users and that it won’t overload it as a whole.
 
-![How it works](https://raw.githubusercontent.com/prezi/reverse-proxy-rate-limiter/master/examples/how-it-works.png?token=ACH8it15kS-54VlLDg8uFzYTpYGy4Q0cks5VDD1bwA%3D%3D)
+![How it works](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/examples/how-it-works.png?raw=true)
 
 The `reverse-proxy-rate-limiter` prioritizes requests from different clients by assigning them to different buckets (shown in red and blue in the figure above) based on HTTP headers. A bucket is basically a set of limitation rules that we want to apply on traffic that we mapped to the bucket. Based on those rules and the active requests both in the bucket and overall service, a request will be forwarded to the service or rejected (indicated with the `429` status code in the figure).
 
 ## Installation
 Rate-limiter can be installed in a few seconds, let's check out our screencast about it:
 
-[![Installation screencast](https://raw.githubusercontent.com/prezi/reverse-proxy-rate-limiter/master/examples/screencast.png?token=ACH8iktHghfGrEfB_szOqGAPRjoVtSdBks5VC1LzwA%3D%3D)](https://asciinema.org/a/17616)
+[![Installation screencast](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/examples/screencast.png?raw=true)](https://asciinema.org/a/17616)
 
 At first clone the rate-limiter github repository:
 ```shell
