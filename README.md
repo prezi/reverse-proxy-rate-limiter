@@ -7,7 +7,7 @@
 ## Usecase
 Web services are often used by very different types of clients. If we imagine a service storing presentations, there could be users loading presentations in their browser and perhaps a search service that would like to index the content of the presentations. In this scenario, the requests from the user wanting to present is much more important than the one from the search service - the latter can wait and come back if it couldn’t retrieve presentations, but the user cannot.
 
-The `reverse-proxy-rate-limiter` helps with managing such a situation. Standing between the clients and the service providing presentations, it ensures that the search service won’t consume capacity that is needed for serving requests from the users. The specific capacity that is required for serving user traffic is computed dynamically. If users would stop requesting presentations from this service, the search service would automatically be enabled to consume of all of the service’s capacity.
+The `reverse-proxy-rate-limiter` helps with managing such a situation. Standing between the clients and the service providing presentations, it ensures that the search service won’t consume capacity that is needed for serving requests from the users. The specific capacity that is required for serving user traffic is computed dynamically. If users would stop requesting presentations from this service, the search service would automatically be enabled to consume all of the service’s capacity.
 
 ## Rate-limiting concept
 
@@ -21,7 +21,7 @@ Many rate-limiting solutions reject requests based on the number of incoming req
 Instead of this approach, the `reverse-proxy-rate-limiter` limits incoming traffic based on the number of requests that are already handled concurrently by the backend service.
 
 ## Installation
-Rate-limiter can be installed in a few seconds, let's check out our screencast about it:
+`reverse-proxy-rate-limiter` can be installed in a few seconds, let's check out our screencast about it:
 
 [![Installation screencast](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/examples/screencast.png?raw=true)](https://asciinema.org/a/17616)
 
