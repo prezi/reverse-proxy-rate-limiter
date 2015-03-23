@@ -136,6 +136,9 @@ There are 5 levels of sources for the settings (all but the first one optional).
 ### Limits Configuration
 The limits configuration is periodically loaded by the `reverse-proxy-rate-limiter` from a file or the backend service behind the rate-limiter. The exact path or URL is determined in the settings (it defaults to `<listenHost>:<listenPort>/rate-limiter`). An example limits configuration can be found [here](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/test/fixtures/example_configuration.json).
 
-## JS-Hint
-* [How to install] (https://packagecontrol.io/packages/JSHint)
-* To add options to the current configurations open 'package.json' and add your options under 'jshintConfig'.
+## Contribution
+Pull requests are very welcome. For discussions, please head over to the [mailing list](https://groups.google.com/forum/#!forum/reverse-proxy-rate-limiter-dev).
+We have a [JSHint]((https://packagecontrol.io/packages/JSHint) configuration in place that can help with polishing your code.
+
+## License
+`reverse-proxy-rate-limiter` is available under the [Apache License, Version 2.0](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/LICENSE).
