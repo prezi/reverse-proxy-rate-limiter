@@ -1,6 +1,6 @@
 # reverse-proxy-rate-limiter
 
-[![Build Status](https://magnum.travis-ci.com/prezi/reverse-proxy-rate-limiter.svg?token=C6T3YoEYndcatuyXax7y&branch=master)](https://magnum.travis-ci.com/prezi/reverse-proxy-rate-limiter)
+[![Build Status](https://travis-ci.org/prezi/reverse-proxy-rate-limiter.svg)](https://travis-ci.org/prezi/reverse-proxy-rate-limiter)
 
 `reverse-proxy-rate-limiter` is a reverse proxy written in Node.js that protects the service behind it from being overloaded. It limits incoming requests based on their origin and the number of active concurrent requests while ensuring that the service’s capacity is fully utilized.
 
