@@ -1,6 +1,20 @@
 {
   "name": "reverse-proxy-rate-limiter",
   "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prezi/reverse-proxy-rate-limiter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/prezi/reverse-proxy-rate-limiter/issues"
+  },
+  "description": "Reverse proxy written in Node.js that limits incoming requests based on their origin and the number of active concurrent requests.",
+  "keywords": [
+    "reverse",
+    "proxy",
+    "rate",
+    "limiter"
+  ],
   "main": "index.js",
   "dependencies": {
     "http-proxy": "1.8.1",
@@ -22,6 +36,7 @@
     "start": "node start-rate-limiter.js",
     "test": "mocha --recursive"
   },
+  "license": "Apache License, Version 2.0",
   "jshintConfig": {
     "undef": true,
     "unused": true,
