@@ -136,6 +136,24 @@ There are 5 levels of sources for the settings (all but the first one optional).
 ### Limits Configuration
 The limits configuration is periodically loaded by the `reverse-proxy-rate-limiter` from a file or the backend service behind the rate-limiter. The exact path or URL is determined in the settings (it defaults to `<listenHost>:<listenPort>/rate-limiter`). An example limits configuration can be found [here](https://github.com/prezi/reverse-proxy-rate-limiter/blob/master/test/fixtures/example_configuration.json).
 
+## Events
+The rate-limiter can be run directly (`node start-rate-limiter.js -c settings.sample.json`) or within another project that depends on it. In the latter case, you can listen to events - to implement monitoring, for example - like this:
+
+```javascript
+var rateLimiter = require("reverse-proxy-rate-limiter");
+var rl = rateLimiter.createRateLimiter(settings);
+rl.proxyEvent.on('rejected', function(req, errorCode, reason) {
+    console.log('Rejected: ', reason);
+});
+```
+
+The following events are emitted:
+- `forwarded`, params: req - when an incoming request was forwarded to the backend service
+- `served`, params: req, res - when a forwarded request was successfully served to the client
+- `failed`, params: err, req, res - when the request failed between the rate-limiter and the backend service
+- `rejected`, params: req, errorCode, reason - when an incoming request was rejected
+- `rejectRequest`, params: req, res, errorCode, reason - allows custom handling of a rejected request. It falls back to a default handler that returns a `429` response if the event is not handled.
+
 ## Naught integration
 The `reverse-proxy-rate-limiter` can be wrapped with [naught](https://github.com/andrewrk/naught) so it supports zero downtime deployment and automatic restarts if the nodejs process dies.
 
