@@ -51,7 +51,7 @@ describe("Initializing Ratelimiter with limitsConfiguration", function () {
     it("should fall back to default limits configuration if loading of configuration failed", function () {
         evaluator.limitConfigurationLoader = new TestLimitsConfigurationLoader("dumy_endpoint");
         evaluator.limitsConfiguration = null;
-
+        evaluator.onConfigurationUpdated = null;
         evaluator.loadConfig();
 
         expect(evaluator.limitsConfiguration.maxRequests).to.be(0);
