@@ -49,15 +49,39 @@ exports.IntegrationTester = IntegrationTester;
 
 IntegrationTester.prototype = {
 
-    sendRequest: function (count, options) {
+    sendRequest: function (options) {
+        var message = new SentMessage(this, ++this.requestId, options);
+        return message;
+    },
+
+    sendRequests: function (count, options, callback) {
         if (typeof count === "undefined" || count === 0) {
             count = 1;
         }
-        var lastMessage;
-        while (count-- > 0) {
-            lastMessage = new SentMessage(this, ++this.requestId, options);
+
+        // simple countdown latch
+        function CDL(countdown, completion) {
+          this.signal = function() {
+              if(--countdown < 1) completion();
+          };
         }
-        return lastMessage;
+
+        var latch = new CDL(count, function() {
+          callback();
+        });
+
+        while (count-- > 0) {
+            var message = new SentMessage(this, ++this.requestId, options);
+            message.onForwarded(function () {
+                latch.signal();
+            });
+            message.onRejected(function () {
+                latch.signal();
+            });
+            message.onFailed(function () {
+                latch.signal();
+            });
+        }
     },
 
     serveRequests: function (howMany) {

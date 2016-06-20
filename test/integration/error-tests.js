@@ -22,7 +22,7 @@ itUtils.describe("Integration tests - error-tests", function (tester) {
     });
 
     it("should not fail if a 4xx response is served", function (done) {
-        tester.sendRequest(1, {
+        tester.sendRequest({
             "expectedStatusCode": 401
         }).onForwarded(function() {
             itUtils.checkPendingRequestsCount(tester, 1);
@@ -34,7 +34,7 @@ itUtils.describe("Integration tests - error-tests", function (tester) {
     });
 
     it("should not fail if a 5xx response is served", function (done) {
-        tester.sendRequest(1, {
+        tester.sendRequest({
             "expectedStatusCode": 500
         }).onForwarded(function() {
             itUtils.checkPendingRequestsCount(tester, 1);
