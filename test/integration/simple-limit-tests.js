@@ -27,8 +27,8 @@ itUtils.describe("Integration tests", function(tester) {
         var options = {
             "bucket": "A"
         };
-        tester.sendRequest(2, options).onForwarded(function() {
-            tester.sendRequest(1, options).onRejected(function() {
+        tester.sendRequests(2, options, function() {
+            tester.sendRequest(options).onRejected(function() {
                 done();
             });
         });
@@ -52,10 +52,10 @@ itUtils.describe("Integration tests", function(tester) {
         var options = {
             "bucket": "A"
         };
-        tester.sendRequest(2, options).onForwarded(function() {
-            tester.sendRequest(1, options).onRejected(function() {
+        tester.sendRequests(2, options, function() {
+            tester.sendRequest(options).onRejected(function() {
                 tester.serveRequests(2).onServed(function() {
-                    tester.sendRequest(1, options).onForwarded(function() {
+                    tester.sendRequest(options).onForwarded(function() {
                         done();
                     });
                 });
@@ -66,7 +66,7 @@ itUtils.describe("Integration tests", function(tester) {
     it("let everything in with default limitsConfiguration", function(done) {
         tester.rateLimiter.evaluator.updateConfig(limitsConfig.defaultLimitsConfig);
 
-        tester.sendRequest(100).onForwarded(function() {
+        tester.sendRequests(100, {}, function() {
             done();
         });
 

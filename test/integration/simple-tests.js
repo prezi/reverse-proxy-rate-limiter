@@ -21,7 +21,7 @@ itUtils.describe("Integration tests - simple tests", function(tester) {
     });
 
     it("should consume all the requests in two steps", function(done) {
-        tester.sendRequest(3).onForwarded(function() {
+        tester.sendRequests(3, {}, function() {
 	        itUtils.checkPendingRequestsCount(tester, 3);
 
             tester.serveRequests(2).onServed(function() {
@@ -70,7 +70,7 @@ itUtils.describe("Integration tests - simple tests", function(tester) {
         changeConfig("max_requests", 1);
         tester.sendRequest().onForwarded(function() {
             tester.sendRequest().onRejected(function() {
-                tester.sendRequest(1, {
+                tester.sendRequest({
                     "path": "healthcheck/"
                 }).onForwarded(function() {
                     assert.equal(tester.rateLimiter.evaluator.counter.getGlobalRequestCount(), 1);
@@ -85,7 +85,7 @@ itUtils.describe("Integration tests - simple tests", function(tester) {
         var testEndpoint = "test-config-endpoint";
         tester.rateLimiter.settings.fullConfigEndpoint = "/" + testEndpoint;
 
-        tester.sendRequest(1, {
+        tester.sendRequest({
             "path": testEndpoint
         }).onRejected(function(res) {
 	        itUtils.checkPendingRequestsCount(tester, 0);

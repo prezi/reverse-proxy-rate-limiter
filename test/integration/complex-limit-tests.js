@@ -42,12 +42,12 @@ itUtils.describe("Integration tests", function(tester) {
     it("soft-hard limit testing", function(done) {
         tester.rateLimiter.evaluator.updateConfig(cfg2);
 
-        tester.sendRequest(8).onForwarded(function() {
-            tester.sendRequest(1).onRejected(function() {
-                tester.sendRequest(2, bucketReuse).onForwarded(function() { // hard limit reached, next will be rejected
-                    tester.sendRequest(1, bucketBackup).onRejected(function() {
+        tester.sendRequests(8, {}, function() {
+            tester.sendRequest().onRejected(function() {
+                tester.sendRequests(2, bucketReuse, function() { // hard limit reached, next will be rejected
+                    tester.sendRequest(bucketBackup).onRejected(function() {
                         tester.serveRequests(-2).onServed(function() { // serve the first two default, still above the "soft" limit
-                            tester.sendRequest(1, bucketBackup).onForwarded(function() {
+                            tester.sendRequest(bucketBackup).onForwarded(function() {
                                 tester.serveRequests().onServed(function() {
                                     done();
                                 });
@@ -62,17 +62,17 @@ itUtils.describe("Integration tests", function(tester) {
     it("bucket ratio test", function(done) {
         tester.rateLimiter.evaluator.updateConfig(cfg2);
 
-        tester.sendRequest(5, bucketBackup).onForwarded(function() { // 5 backup
-            tester.sendRequest(5, bucketReuse).onForwarded(function() {
+        tester.sendRequests(5, bucketBackup, function() { // 5 backup
+            tester.sendRequests(5, bucketReuse, function() {
                 // 5 backup, 5 reuse = 10  = hard limit
                 // next request will be rejected
-                tester.sendRequest(1, bucketBackup).onRejected(function() { //
+                tester.sendRequest(bucketBackup).onRejected(function() { //
                     tester.serveRequests(-1).onServed(function() {
                         // 4 backup, 5 reuse = 9 = soft limit
                         // expected ratio is 2 backup : 6 reuse
                         // next backup will be rejected but next reuse will be forwarded
-                        tester.sendRequest(1, bucketBackup).onRejected(function() {
-                            tester.sendRequest(1, bucketReuse).onForwarded(function() {
+                        tester.sendRequest(bucketBackup).onRejected(function() {
+                            tester.sendRequest(bucketReuse).onForwarded(function() {
                                 done();
                             });
                         });
@@ -101,10 +101,10 @@ itUtils.describe("Integration tests", function(tester) {
     it("ip limit is enforced", function(done) {
         tester.rateLimiter.evaluator.updateConfig(maxRequestsPerIPConfig);
 
-        tester.sendRequest(2, bucketDefault).onForwarded(function() {
-            tester.sendRequest(1, bucketDefault).onRejected(function() {
+        tester.sendRequests(2, bucketDefault, function() {
+            tester.sendRequest(bucketDefault).onRejected(function() {
                 tester.serveRequests(2).onServed(function() {
-                    tester.sendRequest(1, bucketDefault).onForwarded(function() {
+                    tester.sendRequest(bucketDefault).onForwarded(function() {
                         done();
                     });
                 });
