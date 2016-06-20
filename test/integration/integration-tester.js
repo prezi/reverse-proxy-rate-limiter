@@ -99,14 +99,6 @@ IntegrationTester.prototype = {
         return new ServedRequestWrapper(servedRequest);
     },
 
-    failRequestWithInvalidStatusCode: function () {
-        var lastServedRequest = this.requestBuffer.pop();
-        var res = lastServedRequest.res;
-        res.writeHead("invalid_status_code", {'Content-Type': 'text/plain'});
-        res.end();
-        return new FailedRequestWrapper(lastServedRequest);
-    },
-
     failRequestWithInvalidContentLength: function () {
         var lastServedRequest = this.requestBuffer.pop();
         var res = lastServedRequest.res;

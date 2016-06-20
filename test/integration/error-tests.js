@@ -9,18 +9,6 @@ itUtils.describe("Integration tests - error-tests", function (tester) {
         itUtils.changeConfig(tester, key, value);
     }
 
-    it("should handle server errors: HPE_INVALID_STATUS", function (done) {
-        changeConfig("max_requests", 1);
-
-        tester.sendRequest().onForwarded(function () {
-            assert.equal(tester.rateLimiter.evaluator.counter.getGlobalRequestCount(), 1);
-            tester.failRequestWithInvalidStatusCode().onFailed(function () {
-                assert.equal(tester.rateLimiter.evaluator.counter.getGlobalRequestCount(), 0);
-                done();
-            });
-        });
-    });
-
     it("should handle server errors: HPE_INVALID_CONSTANT", function (done) {
         changeConfig("max_requests", 1);
 
