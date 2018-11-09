@@ -1,8 +1,8 @@
 "use strict";
 
-var request = require("request"),
-    assert = require("assert"),
-	itUtils = require('./integration-utils');
+const request = require("request");
+const assert = require("assert");
+const itUtils = require('./integration-utils');
 
 itUtils.describe("Healthcheck test", function(tester) {
 
@@ -14,7 +14,7 @@ itUtils.describe("Healthcheck test", function(tester) {
             }
         }, function (error, response, body) {
             if (!error && response.statusCode === 200) {
-                assert.equal(body, "OK");
+                assert.strictEqual(body, "OK");
                 done();
             }
         });

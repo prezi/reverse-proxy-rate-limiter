@@ -3,6 +3,6 @@
     "listenPort": 7000,
     "forwardPort": 7001,
     "forwardHost": "localhost",
-    "configRefreshInterval": 60000,
+    "configRefreshInterval": 0,
     "configEndpoint": "file:./examples/limits-config.sample.json"
 }

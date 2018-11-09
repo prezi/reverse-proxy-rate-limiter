@@ -1,8 +1,8 @@
-var IntegrationTester = require("./integration-tester").IntegrationTester,
+const IntegrationTester = require("./integration-tester").IntegrationTester,
     _ = require("lodash"),
     assert = require("assert");
 
-var cfg = {
+const cfg = {
     "version": 1,
     "max_requests": 10,
     "healthcheck_url": "/healthcheck/",
@@ -13,7 +13,7 @@ var cfg = {
 };
 
 module.exports.changeConfig = function(tester, key, value) {
-    var _cfg = _.clone(cfg, true);
+    const _cfg = _.cloneDeep(cfg);
     _cfg[key] = value;
     tester.rateLimiter.evaluator.updateConfig(_cfg);
 };
@@ -22,7 +22,7 @@ module.exports.describe = function(name, testingFunction) {
 
     describe(name, function() {
 
-        var tester = new IntegrationTester();
+        const tester = new IntegrationTester();
 
         after(function(done) {
             tester.closeTestBackendServer(function() {
@@ -47,5 +47,5 @@ module.exports.describe = function(name, testingFunction) {
 };
 
 module.exports.checkPendingRequestsCount = function(tester, expectedRequestsCount) {
-    assert.equal(tester.pendingRequestsCount(), expectedRequestsCount);
+    assert.strictEqual(tester.pendingRequestsCount(), expectedRequestsCount);
 };

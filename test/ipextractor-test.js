@@ -1,11 +1,11 @@
 "use strict";
 
-var IPExtractor = require("../lib/reverse-proxy-rate-limiter/ipextractor").IPExtractor;
-var assert = require('assert');
+const IPExtractor = require("../lib/reverse-proxy-rate-limiter/ipextractor").IPExtractor;
+const assert = require('assert');
 
 describe("IP Extracting",function(){
 
-    var ipextractor;
+    let ipextractor;
     beforeEach(function(){
 
         ipextractor = new IPExtractor({
@@ -22,28 +22,28 @@ describe("IP Extracting",function(){
 
 
     it("should return the only ip", function () {
-        var result = ipextractor.extractClientIP('41.168.1.1');
-        assert.equal(result,'41.168.1.1');
+        const result = ipextractor.extractClientIP('41.168.1.1');
+        assert.strictEqual(result,'41.168.1.1');
     });
 
     it("should return the last ip", function () {
-        var result = ipextractor.extractClientIP(' 41.168.1.1, 41.168.1.2 ');
-        assert.equal(result,'41.168.1.2');
+        const result = ipextractor.extractClientIP(' 41.168.1.1, 41.168.1.2 ');
+        assert.strictEqual(result,'41.168.1.2');
     });
 
     it("should return last not ignored ip", function () {
-        var result = ipextractor.extractClientIP(' 41.168.1.1, 192.168.1.2');
-        assert.equal(result,'41.168.1.1');
+        const result = ipextractor.extractClientIP(' 41.168.1.1, 192.168.1.2');
+        assert.strictEqual(result,'41.168.1.1');
     });
 
     it("should return the last ip if no configuration", function () {
         ipextractor = new IPExtractor({});
-        var result = ipextractor.extractClientIP(' 41.168.1.1, 192.168.1.2');
-        assert.equal(result,'192.168.1.2');
+        const result = ipextractor.extractClientIP(' 41.168.1.1, 192.168.1.2');
+        assert.strictEqual(result,'192.168.1.2');
     });
 
     it("should return the last ip if no public ip present", function () {
-        var result = ipextractor.extractClientIP(' 192.168.1.1, 192.168.1.2');
-        assert.equal(result,'192.168.1.2');
+        const result = ipextractor.extractClientIP(' 192.168.1.1, 192.168.1.2');
+        assert.strictEqual(result,'192.168.1.2');
     });
 });

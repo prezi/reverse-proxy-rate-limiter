@@ -44,7 +44,7 @@ $ cat examples/settings.sample.json
     "listenPort": 7000,
     "forwardPort": 7001,
     "forwardHost": "localhost",
-    "configRefreshInterval": 60000,
+    "configRefreshInterval": 0,
     "configEndpoint": "file:./examples/limits-config.sample.json"
 }
 ```
@@ -140,8 +140,8 @@ The limits configuration is periodically loaded by the `reverse-proxy-rate-limit
 The rate-limiter can be run directly (`node start-rate-limiter.js -c settings.sample.json`) or within another project that depends on it. In the latter case, you can listen to events - to implement monitoring, for example - like this:
 
 ```javascript
-var rateLimiter = require("reverse-proxy-rate-limiter");
-var rl = rateLimiter.createRateLimiter(settings);
+const rateLimiter = require("reverse-proxy-rate-limiter");
+const rl = rateLimiter.createRateLimiter(settings);
 rl.proxyEvent.on('rejected', function(req, errorCode, reason) {
     console.log('Rejected: ', reason);
 });

@@ -1,6 +1,6 @@
 "use strict";
 
-var assert = require("assert"),
+const assert = require("assert"),
     itUtils = require('./integration-utils');
 
 itUtils.describe("Integration tests - error-tests", function (tester) {
@@ -13,9 +13,9 @@ itUtils.describe("Integration tests - error-tests", function (tester) {
         changeConfig("max_requests", 1);
 
         tester.sendRequest().onForwarded(function () {
-            assert.equal(tester.rateLimiter.evaluator.counter.getGlobalRequestCount(), 1);
+            assert.strictEqual(tester.rateLimiter.evaluator.counter.getGlobalRequestCount(), 1);
             tester.failRequestWithInvalidContentLength().onFailed(function () {
-                assert.equal(tester.rateLimiter.evaluator.counter.getGlobalRequestCount(), 0);
+                assert.strictEqual(tester.rateLimiter.evaluator.counter.getGlobalRequestCount(), 0);
                 done();
             });
         });

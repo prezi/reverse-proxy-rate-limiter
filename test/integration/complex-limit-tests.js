@@ -1,10 +1,10 @@
 "use strict";
 
-var itUtils = require('./integration-utils');
+const itUtils = require('./integration-utils');
 
 itUtils.describe("Integration tests", function(tester) {
 
-    var cfg2 = {
+    const cfg2 = {
         version: 1,
         max_requests: 10,
         buffer_ratio: 0.2,
@@ -31,10 +31,10 @@ itUtils.describe("Integration tests", function(tester) {
             ]
         }]
     };
-    var bucketReuse = {
+    const bucketReuse = {
         "bucket": "reuse"
     };
-    var bucketBackup = {
+    const bucketBackup = {
         "bucket": "backup"
     };
 
@@ -82,7 +82,7 @@ itUtils.describe("Integration tests", function(tester) {
         });
     });
 
-    var maxRequestsPerIPConfig = {
+    const maxRequestsPerIPConfig = {
         version: 1,
         max_requests: 10,
         buffer_ratio: 0.2,
@@ -93,7 +93,7 @@ itUtils.describe("Integration tests", function(tester) {
             }
         }]
     };
-    var bucketDefault = {
+    const bucketDefault = {
         "bucket": "default"
     };
 
