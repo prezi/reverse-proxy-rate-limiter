@@ -1,20 +1,19 @@
 "use strict";
 
-var limitsConfig = require("../../lib/reverse-proxy-rate-limiter/limits-config"),
-    assert = require("assert"),
-    http = require("http"),
-    itUtils = require('./integration-utils');
+const limitsConfig = require("../../lib/reverse-proxy-rate-limiter/limits-config");
+const assert = require("assert");
+const itUtils = require('./integration-utils');
 
 itUtils.describe("Integration tests - from the hooks", function(tester) {
 
-    var eventStat = bindEventHandlers(tester.rateLimiter.proxyEvent);
+    const eventStat = bindEventHandlers(tester.rateLimiter.proxyEvent);
 
     function bindEventHandlers(proxyEvent) {
-        var eventStat = {};
+        const eventStat = {};
 
-        var e = function(name) {
-            return function() {
-                var v = eventStat[name] != undefined ? eventStat[name] : 0;
+        const e = function (name) {
+            return function () {
+                const v = eventStat[name] != undefined ? eventStat[name] : 0;
                 eventStat[name] = v + 1;
             }
         };
@@ -53,7 +52,7 @@ itUtils.describe("Integration tests - from the hooks", function(tester) {
 
         tester.sendRequest().onForwarded(function() {
             tester.serveRequests(1).onServed(function() {
-                assert.equal(eventStat['served'], 1);
+                assert.strictEqual(eventStat['served'], 1);
                 done();
             });
         });
@@ -63,7 +62,7 @@ itUtils.describe("Integration tests - from the hooks", function(tester) {
         clearEventStat(eventStat);
 
         tester.sendRequest().onForwarded(function() {
-            assert.equal(eventStat['forwarded'], 1);
+            assert.strictEqual(eventStat['forwarded'], 1);
             done();
         });
     });
@@ -73,10 +72,10 @@ itUtils.describe("Integration tests - from the hooks", function(tester) {
         changeConfig("max_requests", 1);
 
         tester.sendRequest().onForwarded(function() {
-            assert.equal(eventStat['forwarded'], 1);
+            assert.strictEqual(eventStat['forwarded'], 1);
             tester.sendRequest().onRejected(function() {
-                assert.equal(eventStat['forwarded'], 1);
-                assert.equal(eventStat['rejected'], 1);
+                assert.strictEqual(eventStat['forwarded'], 1);
+                assert.strictEqual(eventStat['rejected'], 1);
                 done();
             });
         });
@@ -89,13 +88,13 @@ itUtils.describe("Integration tests - from the hooks", function(tester) {
         tester.sendRequest().onForwarded(function() {
             assert(eventStat['forwarded'], 1);
             tester.sendRequest().onRejected(function(response) {
-                assert.equal(eventStat['forwarded'], 1);
-                assert.equal(eventStat['rejected'], 1);
-                assert.equal(response.statusCode, 404);
-                assert.equal(JSON.parse(response.body).code, 429)
+                assert.strictEqual(eventStat['forwarded'], 1);
+                assert.strictEqual(eventStat['rejected'], 1);
+                assert.strictEqual(response.statusCode, 404);
+                assert.strictEqual(JSON.parse(response.body).code, 429);
                 tester.serveRequests(1).onServed(function() {
-                    assert.equal(eventStat['forwarded'], 1);
-                    assert.equal(eventStat['rejected'], 1);
+                    assert.strictEqual(eventStat['forwarded'], 1);
+                    assert.strictEqual(eventStat['rejected'], 1);
                     done();
                 })
             });
@@ -107,8 +106,8 @@ itUtils.describe("Integration tests - from the hooks", function(tester) {
 
         tester.sendRequest().onForwarded(function() {
             tester.failRequestWithInvalidContentLength().onFailed(function() {
-                assert.equal(eventStat['forwarded'], 1);
-                assert.equal(eventStat['failed'], 1);
+                assert.strictEqual(eventStat['forwarded'], 1);
+                assert.strictEqual(eventStat['failed'], 1);
                 done();
             });
         });

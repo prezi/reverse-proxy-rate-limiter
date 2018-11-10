@@ -1,12 +1,12 @@
 (function () {
-    "use strict"; 
+    "use strict";
 
-    var http = require("http");
+    const http = require("http");
 
     function handler(req, res) {
-        var status_code = 200;
+        const status_code = 200;
 
-        var body = "";
+        let body = "";
         body += "Hello ratelimiter!\n";
         body += req.url + "\n";
         body += JSON.stringify(req.headers, true, 2);
@@ -28,4 +28,4 @@
             handler(req, res);
         }
     }).listen(7001);
-})()
+})();

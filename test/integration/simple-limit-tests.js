@@ -1,6 +1,6 @@
 "use strict";
 
-var limitsConfig = require("../../lib/reverse-proxy-rate-limiter/limits-config"),
+const limitsConfig = require("../../lib/reverse-proxy-rate-limiter/limits-config"),
     itUtils = require('./integration-utils');
 
 itUtils.describe("Integration tests", function(tester) {
@@ -10,7 +10,7 @@ itUtils.describe("Integration tests", function(tester) {
     }
 
     it("should limit per bucket", function(done) {
-        var buckets = [{
+        const buckets = [{
             "name": "default"
         }, {
             "name": "A",
@@ -24,7 +24,7 @@ itUtils.describe("Integration tests", function(tester) {
 
         changeConfig("buckets", buckets);
         changeConfig("max_requests", 2);
-        var options = {
+        const options = {
             "bucket": "A"
         };
         tester.sendRequests(2, options, function() {
@@ -35,7 +35,7 @@ itUtils.describe("Integration tests", function(tester) {
     });
 
     it("should update bucket limits when requests are served", function(done) {
-        var buckets = [{
+        const buckets = [{
             "name": "default"
         }, {
             "name": "A",
@@ -49,7 +49,7 @@ itUtils.describe("Integration tests", function(tester) {
 
         changeConfig("buckets", buckets);
         changeConfig("max_requests", 2);
-        var options = {
+        const options = {
             "bucket": "A"
         };
         tester.sendRequests(2, options, function() {

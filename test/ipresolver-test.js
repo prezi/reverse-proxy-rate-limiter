@@ -1,16 +1,16 @@
 "use strict";
 
-var http = require('http'),
-    assert = require('assert'),
-    helpers = require('./helpers'),
-    ipResolver = require('../lib/reverse-proxy-rate-limiter/ipresolver');
+const http = require('http');
+const assert = require('assert');
+const helpers = require('./helpers');
+const ipResolver = require('../lib/reverse-proxy-rate-limiter/ipresolver');
 
-var EXPECTED = "expected";
-var ACTUAL = "actual";
-var HOST = "localhost";
-var PORT = "9876";
+const EXPECTED = "expected";
+const ACTUAL = "actual";
+const HOST = "localhost";
+const PORT = "9876";
 
-var TEST_FORWARD_HEADERS = {
+const TEST_FORWARD_HEADERS = {
     "X-TEST-FORWARDED-FOR": {
         "ignored_ip_ranges": [
             "127.0.0.0/8",
@@ -22,41 +22,41 @@ var TEST_FORWARD_HEADERS = {
     }
 };
 
-var TEST_FORWARD_HEADER = 'X-TEST-FORWARDED-FOR';
+const TEST_FORWARD_HEADER = 'X-TEST-FORWARDED-FOR';
 
-var CLIENT_IP = "12.34.56.78";
-var LOCAL_HOST = "127.0.0.1";
-var SOME_IP = "11.22.33.44";
-var IP_LIST = CLIENT_IP + ", " + LOCAL_HOST;
-var LONG_IP_LIST = SOME_IP + " ," + IP_LIST;
+const CLIENT_IP = "12.34.56.78";
+const LOCAL_HOST = "127.0.0.1";
+const SOME_IP = "11.22.33.44";
+const IP_LIST = CLIENT_IP + ", " + LOCAL_HOST;
+const LONG_IP_LIST = SOME_IP + " ," + IP_LIST;
 
 function createRequest(headers, expected, done) {
     headers[EXPECTED] = expected;
-    var options = {
+    const options = {
         hostname: HOST,
         path: '/',
         port: PORT,
         headers: headers
     };
-    var req = http.request(options, function (response) {
-        assert.equal(response.headers[ACTUAL], expected);
+    const req = http.request(options, function (response) {
+        assert.strictEqual(response.headers[ACTUAL], expected);
         done();
     });
     req.end();
 }
 
 describe("Client IP tests", function () {
-    var headers;
-    var httpServer;
+    let headers;
+    let httpServer;
 
-    before(function () {
+    before(function (done) {
         httpServer = http.createServer(function (req, res) {
-            var ip = new ipResolver.IPResolver(TEST_FORWARD_HEADERS).resolve(req);
+            const ip = new ipResolver.IPResolver(TEST_FORWARD_HEADERS).resolve(req);
             res.setHeader(ACTUAL, ip);
             res.setHeader("Connection", "close");
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end();
-        }).listen(PORT, HOST);
+        }).listen(PORT, HOST, done);
     });
 
     after(function (done) {

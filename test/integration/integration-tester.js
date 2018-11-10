@@ -1,17 +1,17 @@
 "use strict";
 
-var http = require("http"),
+const http = require("http"),
     rateLimiter = require("./../../index.js"),
-    request = require("request"),
-    url = require('url');
+    request = require("request");
+let url = require('url');
 
-var HTTP_OK = 200,
+const HTTP_OK = 200,
     HTTP_NOT_FOUND = 404,
     HTTP_TOO_MANY_REQUESTS = 429,
     HTTP_INTERNAL_SERVER_ERROR = 500,
     REQUEST_ID_HEADER = "X-RateLimiter-IntegrationTest-RequestId";
 
-var port = 8080;
+let port = 8080;
 
 function IntegrationTester() {
 	this.requestBuffer = [];
@@ -21,9 +21,9 @@ function IntegrationTester() {
 	this.forwardPort = port + 1;
 	port += 2;
 
-    var _this = this;
+    const _this = this;
     this.testBackendServer = http.createServer(function (req, res) {
-        var sentMessage = _this.sentMessages[getRequestId(req)];
+        const sentMessage = _this.sentMessages[getRequestId(req)];
 
         _this.requestBuffer.push({
             req: req,
@@ -35,8 +35,8 @@ function IntegrationTester() {
 
     }).listen(this.forwardPort);
 
-    var settingsModule = require('../../lib/reverse-proxy-rate-limiter/settings');
-    var settings = settingsModule.load();
+    const settingsModule = require('../../lib/reverse-proxy-rate-limiter/settings');
+    let settings = settingsModule.load();
 
     settings.listenPort = this.listenPort;
     settings.forwardPort = this.forwardPort;
@@ -50,8 +50,7 @@ exports.IntegrationTester = IntegrationTester;
 IntegrationTester.prototype = {
 
     sendRequest: function (options) {
-        var message = new SentMessage(this, ++this.requestId, options);
-        return message;
+        return new SentMessage(this, ++this.requestId, options);
     },
 
     sendRequests: function (count, options, callback) {
@@ -66,12 +65,12 @@ IntegrationTester.prototype = {
           };
         }
 
-        var latch = new CDL(count, function() {
-          callback();
+        const latch = new CDL(count, function () {
+            callback();
         });
 
         while (count-- > 0) {
-            var message = new SentMessage(this, ++this.requestId, options);
+            const message = new SentMessage(this, ++this.requestId, options);
             message.onForwarded(function () {
                 latch.signal();
             });
@@ -93,7 +92,7 @@ IntegrationTester.prototype = {
             howMany = this.requestBuffer.length;
         }
 
-        var fromFirst = false;
+        let fromFirst = false;
         if (howMany < 0) {
             fromFirst = true;
             howMany *= -1;
@@ -103,7 +102,7 @@ IntegrationTester.prototype = {
             throw "cannot serve more requests than the size of the request buffer (" + howMany + " > " + this.requestBuffer.length + ")";
         }
 
-        var lastServedRequest;
+        let lastServedRequest;
         while (howMany-- > 0) {
             lastServedRequest = fromFirst ? this.requestBuffer.shift() : this.requestBuffer.pop();
             flushSingleRequest(HTTP_OK, lastServedRequest.req, lastServedRequest.res);
@@ -117,15 +116,15 @@ IntegrationTester.prototype = {
             throw "RequestBuffer empty, cannot serve any requests";
         }
 
-        var servedRequest = this.requestBuffer.pop();
+        const servedRequest = this.requestBuffer.pop();
         flushSingleRequest(statusCode, servedRequest.req, servedRequest.res);
 
         return new ServedRequestWrapper(servedRequest);
     },
 
     failRequestWithInvalidContentLength: function () {
-        var lastServedRequest = this.requestBuffer.pop();
-        var res = lastServedRequest.res;
+        const lastServedRequest = this.requestBuffer.pop();
+        const res = lastServedRequest.res;
         res.writeHead(200, {
             'Content-Length': 0,
             'Content-Type': 'text/plain'
@@ -180,10 +179,11 @@ function FailedRequestWrapper(failedRequest) {
 }
 
 function SentMessage(it, requestId, options) {
-    var onForwardedCallback, onRejectedCallback, onFailedCallback;
-    var onServedCallback = defaultOnServedCallback;
+    let onForwardedCallback, onRejectedCallback, onFailedCallback;
+    let onServedCallback = defaultOnServedCallback;
+    let expectedStatusCode;
 
-    var headers = {};
+    const headers = {};
     headers[REQUEST_ID_HEADER] = requestId;
     url = "http://localhost:" + it.listenPort + "/";
 
@@ -193,7 +193,7 @@ function SentMessage(it, requestId, options) {
         }
 
         if ("expectedStatusCode" in options) {
-            var expectedStatusCode = options.expectedStatusCode;
+            expectedStatusCode = options.expectedStatusCode;
         }
 
         if (options.path) {

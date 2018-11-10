@@ -1,7 +1,7 @@
 "use strict";
 
-var assert = require("assert"),
-    itUtils = require('./integration-utils');
+const assert = require("assert");
+const itUtils = require('./integration-utils');
 
 itUtils.describe("Integration tests - simple tests", function(tester) {
 
@@ -73,7 +73,7 @@ itUtils.describe("Integration tests - simple tests", function(tester) {
                 tester.sendRequest({
                     "path": "healthcheck/"
                 }).onForwarded(function() {
-                    assert.equal(tester.rateLimiter.evaluator.counter.getGlobalRequestCount(), 1);
+                    assert.strictEqual(tester.rateLimiter.evaluator.counter.getGlobalRequestCount(), 1);
                     done();
                 });
             });
@@ -81,15 +81,15 @@ itUtils.describe("Integration tests - simple tests", function(tester) {
     });
 
     it("should not proxy requests to the configEndpoint", function(done) {
-        var oldEndpoint = tester.rateLimiter.settings.fullConfigEndpoint;
-        var testEndpoint = "test-config-endpoint";
+        const oldEndpoint = tester.rateLimiter.settings.fullConfigEndpoint;
+        const testEndpoint = "test-config-endpoint";
         tester.rateLimiter.settings.fullConfigEndpoint = "/" + testEndpoint;
 
         tester.sendRequest({
             "path": testEndpoint
         }).onRejected(function(res) {
 	        itUtils.checkPendingRequestsCount(tester, 0);
-            assert.equal(res.statusCode, 404);
+            assert.strictEqual(res.statusCode, 404);
 
             tester.rateLimiter.settings.fullConfigEndpoint = oldEndpoint;
             done();
