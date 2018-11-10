@@ -1,17 +1,19 @@
 {
   "log4js": {
-    "appenders": [
-      {
-        "type": "log4js-scribe-appender",
+    "appenders": {
+      "console" : {
+        "type": "console",
         "layout": {
           "type": "pattern",
           "pattern": "%d{ISO8601} %h %c %p %m%n"
-        },
-        "scribeCategory": "reverse-proxy-rate-limiter"
+        }
       }
-    ],
-    "levels": {
-      "[all]": "INFO"
+    },
+    "categories": {
+      "default": {
+        "appenders": ["console"],
+        "level": "info"
+      }
     }
   },
   "forwarded_headers": {

@@ -1,16 +1,19 @@
 {
   "log4js": {
-    "appenders": [
-      {
+    "appenders": {
+      "console" : {
         "type": "console",
         "layout": {
           "type": "pattern",
           "pattern": "%d{ISO8601} %h %c %p %m%n"
         }
       }
-    ],
-    "levels": {
-      "[all]": "OFF"
+    },
+    "categories": {
+      "default": {
+        "appenders": ["console"],
+        "level": "off"
+      }
     }
   }
 }
